@@ -1,6 +1,12 @@
 const express = require("express");
-require('dotenv').config();
+const fs = require("fs");
+require("dotenv").config();
 const SpotifyWebApi = require("spotify-web-api-node");
+
+function writeToOutputFile(output) {
+  fs.writeFileSync("output.txt", output);
+  console.log("I HATH WRITTEN");
+}
 
 const scopes = [
   "ugc-image-upload",
@@ -70,6 +76,7 @@ app.get("/callback", (req, res) => {
         `Sucessfully retreived access token. Expires in ${expires_in} s.`
       );
       res.send("Success! You can now close the window.");
+      writeToOutputFile(access_token);
 
       setInterval(async () => {
         const data = await spotifyApi.refreshAccessToken();
@@ -78,7 +85,8 @@ app.get("/callback", (req, res) => {
         console.log("The access token has been refreshed!");
         console.log("access_token:", access_token);
         spotifyApi.setAccessToken(access_token);
-      }, (expires_in / 2) * 1000);
+        writeToOutputFile(access_token);
+      }, 10000);
     })
     .catch((error) => {
       console.error("Error getting Tokens:", error);
