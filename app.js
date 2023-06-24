@@ -1,4 +1,5 @@
 const express = require("express");
+require('dotenv').config();
 const SpotifyWebApi = require("spotify-web-api-node");
 
 const scopes = [
@@ -25,8 +26,8 @@ const scopes = [
 
 const spotifyApi = new SpotifyWebApi({
   redirectUri: "http://localhost:5173/callback",
-  clientId: "f18d4fc6afbb415b89e7ae2ec149727b",
-  clientSecret: "4d26e5852bcd489a879fa087843cb9a4",
+  clientId: process.env.clientID,
+  clientSecret: process.env.clientSecret,
 });
 
 const app = express();
