@@ -88,7 +88,7 @@ app.get("/callback", (req, res) => {
 
         global_email = me.body.email;
 
-        console.log(me);
+        // console.log(me);
 
         const user = new User({
           email: global_email,
@@ -133,14 +133,21 @@ app.post("/myPlaylists", async function (req, res) {
   console.log("---------------+++++++++++++++++++++++++");
   let playlists = [];
 
-  console.log(data);
+  const jsonData = JSON.stringify(data, null, 4);
+
+  console.log(jsonData);
 
   for (let playlist of data.body.items) {
-    playlists.push(playlist.name);
-    console.log("Name: " + playlist.name + "\nId: " + playlist.id + "\n\n");
+    playlists.push([playlist.images[0].url, playlist.name, playlist.id]);
   }
 
+  console.log(playlists);
+
   res.render("MyPlaylists", { playlists: playlists });
+});
+
+app.post("/getUserPlaylistSongs", async function (req, res) {
+  
 });
 
 app.listen(3000, () =>

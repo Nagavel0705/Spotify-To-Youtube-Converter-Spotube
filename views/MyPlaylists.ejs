@@ -1,17 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spotube</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <div class="home-div">
-        <h1>Your Playlists</h1>
+    <h1 style="margin-top: 60px;">Your Playlists</h1>
+    <div class="my-playlists-div">
         <% playlists.forEach(playlist => { %>
-            <h2 style="color: white;"><%= playlist %></h2>
+          <form action="/getUserPlaylistSongs" method="POST">
+            <div class="playlist-elements" onclick="this.parentNode.submit()">
+              <input type="hidden" name="playlistId" value="<%= playlist[2] %>">
+              <img class="playlist-banner" src="<%= playlist[0] %>" alt="Playlist banner">
+              <button type="submit" class="playlist-link">
+                <%= playlist[1] %>
+              </button>
+            </div>
+          </form>
         <% }); %>
-    </div>
+      </div>      
 </body>
+
 </html>
