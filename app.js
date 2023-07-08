@@ -116,7 +116,7 @@ app.get("/callback", (req, res) => {
           { email: global_email },
           { accessToken: access_token }
         );
-      }, 3500000);
+      }, 3600000);
     })
     .catch((error) => {
       console.error("Error getting Tokens:", error);
@@ -135,7 +135,7 @@ app.post("/myPlaylists", async function (req, res) {
 
   const jsonData = JSON.stringify(data, null, 4);
 
-  console.log(jsonData);
+  // console.log(jsonData);
 
   for (let playlist of data.body.items) {
     playlists.push([playlist.images[0].url, playlist.name, playlist.id]);
@@ -147,7 +147,23 @@ app.post("/myPlaylists", async function (req, res) {
 });
 
 app.post("/getUserPlaylistSongs", async function (req, res) {
-  
+  const playlistID = req.body.playlistId;
+  const playlistName = req.body.playlistName;
+
+  const tracks = [];
+
+  // console.log(playlistName, playlistID);
+  const trackData = await spotifyApi.getPlaylistTracks(playlistID);
+
+  // console.log(JSON.stringify(trackData, null, 4));
+
+  for(let song of trackData.body.items){
+    tracks.push([song.track.name, song.track.album.images[0].url]);
+  }
+
+  console.log(tracks);
+
+  res.render("MyPlaylistTracks", { playlistName: playlistName, tracks: tracks });
 });
 
 app.listen(3000, () =>

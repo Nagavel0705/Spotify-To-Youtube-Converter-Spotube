@@ -9,15 +9,15 @@
 </head>
 
 <body>
-    <h1 style="margin-top: 60px;">Your Playlists</h1>
+    <h1 style="margin-top: 60px;"><%= playlistName %></h1>
     <div class="my-playlists-div">
-        <% playlists.forEach(playlist => { %>
+        <% tracks.forEach(track => { %>
           <form action="/getUserPlaylistSongs" method="POST">
             <div class="playlist-elements" onclick="this.parentNode.submit()">
-              <input type="hidden" name="playlistId" value="<%= playlist[2] %>">
-              <img class="playlist-banner" src="<%= playlist[0] %>" alt="Playlist banner">
-              <button type="submit" class="playlist-link" name="playlistName" value="<%= playlist[1] %>">
-                <%= playlist[1] %>
+              <input type="hidden" name="playlistId" value="<%= track[2] %>">
+              <img class="playlist-banner" src="<%= track[1] %>" alt="Playlist banner">
+              <button type="submit" class="playlist-link">
+                <%= track[0] %>
               </button>
             </div>
           </form>
