@@ -1,12 +1,24 @@
 const express = require("express");
-const fs = require("fs");
+const bodyParser = require("body-parser");
 require("dotenv").config();
 const SpotifyWebApi = require("spotify-web-api-node");
+const mongoose = require("mongoose");
 
-function writeToOutputFile(output) {
-  fs.writeFileSync("output.txt", output);
-  console.log("I HATH WRITTEN");
-}
+mongoose.connect("mongodb://127.0.0.1:27017/spotifyDB");
+
+let global_email = ""; // STORING THE CURRENT USER'S EMAIL GLOBALLY FOR ACCESS IN ALL ROUTES
+
+const User = mongoose.model("User", {
+  email: String,
+  id: String,
+  accessToken: String,
+  refreshToken: String,
+});
+
+const app = express();
+app.use(express.static("public"));
+app.set("view engine", "ejs");
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const scopes = [
   "ugc-image-upload",
@@ -31,13 +43,10 @@ const scopes = [
 ];
 
 const spotifyApi = new SpotifyWebApi({
-  redirectUri: "http://localhost:5173/callback",
+  redirectUri: "http://localhost:3000/callback",
   clientId: process.env.clientID,
   clientSecret: process.env.clientSecret,
 });
-
-const app = express();
-
 // AUTHORIZATION OF THE USER
 
 app.get("/", (req, res) => {
@@ -61,7 +70,8 @@ app.get("/callback", (req, res) => {
 
   spotifyApi
     .authorizationCodeGrant(code)
-    .then((data) => {
+    .then(async (data) => {
+      // console.log(data);
       const access_token = data.body["access_token"];
       const refresh_token = data.body["refresh_token"];
       const expires_in = data.body["expires_in"];
@@ -69,14 +79,30 @@ app.get("/callback", (req, res) => {
       spotifyApi.setAccessToken(access_token);
       spotifyApi.setRefreshToken(refresh_token);
 
-      console.log("access_token:", access_token);
-      console.log("refresh_token:", refresh_token);
-
       console.log(
         `Sucessfully retreived access token. Expires in ${expires_in} s.`
       );
-      res.send("Success! You can now close the window.");
-      writeToOutputFile(access_token);
+
+      try {
+        const me = await spotifyApi.getMe();
+
+        global_email = me.body.email;
+
+        console.log(me);
+
+        const user = new User({
+          email: global_email,
+          id: me.body.id,
+          accessToken: access_token,
+          refreshToken: refresh_token,
+        });
+
+        user.save();
+
+        res.render("welcome", { name: me.body["display_name"] });
+      } catch (e) {
+        console.error(e);
+      }
 
       setInterval(async () => {
         const data = await spotifyApi.refreshAccessToken();
@@ -85,8 +111,12 @@ app.get("/callback", (req, res) => {
         console.log("The access token has been refreshed!");
         console.log("access_token:", access_token);
         spotifyApi.setAccessToken(access_token);
-        writeToOutputFile(access_token);
-      }, 10000);
+
+        await User.findOneAndUpdate(
+          { email: global_email },
+          { accessToken: access_token }
+        );
+      }, 3500000);
     })
     .catch((error) => {
       console.error("Error getting Tokens:", error);
@@ -94,8 +124,27 @@ app.get("/callback", (req, res) => {
     });
 });
 
-app.listen(5173, () =>
+app.post("/myPlaylists", async function (req, res) {
+
+  const user = await User.findOne({ email: global_email });
+
+  const data = await spotifyApi.getUserPlaylists(user.id);
+
+  console.log("---------------+++++++++++++++++++++++++");
+  let playlists = [];
+
+  console.log(data);
+
+  for (let playlist of data.body.items) {
+    playlists.push(playlist.name);
+    console.log("Name: " + playlist.name + "\nId: " + playlist.id + "\n\n");
+  }
+
+  res.render("MyPlaylists", { playlists: playlists });
+});
+
+app.listen(3000, () =>
   console.log(
-    "HTTP Server up. Now go to http://localhost:5173 in your browser."
+    "HTTP Server up. Now go to http://localhost:3000 in your browser."
   )
 );
