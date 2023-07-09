@@ -12,13 +12,19 @@
     <h1 style="margin-top: 60px;"><%= playlistName %></h1>
     <div class="my-playlists-div">
         <% tracks.forEach(track => { %>
-          <form action="/getUserPlaylistSongs" method="POST">
+          <form action="/convertToYoutube" method="POST">
             <div class="playlist-elements" onclick="this.parentNode.submit()">
-              <input type="hidden" name="playlistId" value="<%= track[2] %>">
               <img class="playlist-banner" src="<%= track[1] %>" alt="Playlist banner">
-              <button type="submit" class="playlist-link">
-                <%= track[0] %>
-              </button>
+
+              <% if (track[1] === "Spotify_App_Logo.svg.png") { %>
+                <p class="playlist-link">
+                  Song Not Available :&#40;
+                </p>
+              <% } else { %>
+                <p class="playlist-link">
+                  <%= track[0] %>
+                </p>
+              <% } %>
             </div>
           </form>
         <% }); %>

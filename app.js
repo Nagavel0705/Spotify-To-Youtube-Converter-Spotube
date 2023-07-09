@@ -125,7 +125,6 @@ app.get("/callback", (req, res) => {
 });
 
 app.post("/myPlaylists", async function (req, res) {
-
   const user = await User.findOne({ email: global_email });
 
   const data = await spotifyApi.getUserPlaylists(user.id);
@@ -133,15 +132,13 @@ app.post("/myPlaylists", async function (req, res) {
   console.log("---------------+++++++++++++++++++++++++");
   let playlists = [];
 
-  const jsonData = JSON.stringify(data, null, 4);
-
-  // console.log(jsonData);
+  // console.log(JSON.stringify(data, null, 4));
 
   for (let playlist of data.body.items) {
     playlists.push([playlist.images[0].url, playlist.name, playlist.id]);
   }
 
-  console.log(playlists);
+  // console.log(playlists);
 
   res.render("MyPlaylists", { playlists: playlists });
 });
@@ -152,17 +149,23 @@ app.post("/getUserPlaylistSongs", async function (req, res) {
 
   const tracks = [];
 
-  // console.log(playlistName, playlistID);
   const trackData = await spotifyApi.getPlaylistTracks(playlistID);
 
   // console.log(JSON.stringify(trackData, null, 4));
 
-  for(let song of trackData.body.items){
-    tracks.push([song.track.name, song.track.album.images[0].url]);
+  for (let song of trackData.body.items) {
+    if (!song.track.album.images[0]) {
+      tracks.push([song.track.name, "Spotify_App_Logo.svg.png", []]);
+    } else {
+      tracks.push([song.track.name, song.track.album.images[0].url, []]);
+    }
+    for (let artist of song.track.artists) {
+      tracks[tracks.length - 1][2].push(artist.name);
+    }
   }
 
-  console.log(tracks);
-
+  // console.log(tracks);
+  console.log(playlistName, playlistID);
   res.render("MyPlaylistTracks", { playlistName: playlistName, tracks: tracks });
 });
 

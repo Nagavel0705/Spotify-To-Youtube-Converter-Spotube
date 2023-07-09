@@ -2,27 +2,28 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotube</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spotube</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <h1 style="margin-top: 60px;">Your Playlists</h1>
-    <div class="my-playlists-div">
-        <% playlists.forEach(playlist => { %>
-          <form action="/getUserPlaylistSongs" method="POST">
-            <div class="playlist-elements" onclick="this.parentNode.submit()">
-              <input type="hidden" name="playlistId" value="<%= playlist[2] %>">
-              <img class="playlist-banner" src="<%= playlist[0] %>" alt="Playlist banner">
-              <button type="submit" class="playlist-link" name="playlistName" value="<%= playlist[1] %>">
-                <%= playlist[1] %>
-              </button>
-            </div>
-          </form>
-        <% }); %>
-      </div>      
+  <h1 style="margin-top: 60px;">Your Playlists</h1>
+  <div class="my-playlists-div">
+    <% playlists.forEach(playlist=> { %>
+      <form action="/getUserPlaylistSongs" method="POST">
+        <div class="playlist-elements" onclick="this.parentNode.submit()">
+          <input type="hidden" name="playlistId" value="<%= playlist[2] %>">
+          <input type="hidden" name="playlistName" value="<%= playlist[1] %>">
+          <img class="playlist-banner" src="<%= playlist[0] %>" alt="Playlist banner">
+          <p class="playlist-link">
+            <%= playlist[1] %>
+          </p>
+        </div>
+      </form>
+      <% }); %>
+  </div>
 </body>
 
 </html>
