@@ -33,31 +33,61 @@ body {
 
 .playlist-elements:hover {
   cursor: pointer;
-  transform: scale(1.05);
+  transform: scale(1.01);
   transition: cubic-bezier(0.075, 0.82, 0.165, 1) 0.5s;
   /* background-color: #0f0c29; */
-  background-color: 	#1DB954;
+  background-color: #1DB954;
 }
 
 .playlist-banner {
   display: inline-block;
-  height: 60px;
-  width: 60px;
+  height: 65px;
+  width: 65px;
   border-radius: 10%;
   margin: 20px;
 }
 
-.playlist-link {
+.playlist-name {
   color: white;
   background: none;
   border: none;
   font-size: 1.5em;
   margin-left: 20px;
+  margin-right: 20px;
   text-align: left;
 }
 
-.playlist-link:hover {
+.playlist-name:hover {
   cursor: pointer;
+}
+
+/* STYLES FOR MyPlaylistTracks.ejs */
+
+.track-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.artist-names {
+  color: lightgray;
+  margin: 0px 20px 20px 20px;
+}
+
+.artist-name {
+  margin: 0px;
+  display: inline;
+}
+
+.playlist-header-div {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  margin: 50px;
+}
+
+.playlist-header {
+  margin-left: 50px;
 }
 
 /* MEDIA STYLES */
@@ -106,7 +136,7 @@ body {
     padding: 5px;
   }
 
-  .playlist-link {
+  .playlist-name {
     font-size: 20px;
   }
 }

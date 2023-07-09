@@ -9,22 +9,37 @@
 </head>
 
 <body>
-    <h1 style="margin-top: 60px;"><%= playlistName %></h1>
+    <div class="playlist-header-div">
+      <img src="<%= playlistImg %>" alt="Playlist banner" width="150px" height="150px"/>
+      <h1 class="playlist-header"><%= playlistName %></h1>
+    </div>
     <div class="my-playlists-div">
         <% tracks.forEach(track => { %>
           <form action="/convertToYoutube" method="POST">
             <div class="playlist-elements" onclick="this.parentNode.submit()">
-              <img class="playlist-banner" src="<%= track[1] %>" alt="Playlist banner">
+              <img class="playlist-banner" src="<%= track[1] %>" alt="Track image">
 
-              <% if (track[1] === "Spotify_App_Logo.svg.png") { %>
-                <p class="playlist-link">
-                  Song Not Available :&#40;
-                </p>
-              <% } else { %>
-                <p class="playlist-link">
-                  <%= track[0] %>
-                </p>
-              <% } %>
+              <div class="track-info">
+                <% if (track[1] === "Spotify_App_Logo.svg.png") { %>
+                  <p class="playlist-name">
+                    Song Not Available :&#40;
+                  </p>
+                <% } else { %>
+                  <p class="playlist-name">
+                    <%= track[0] %>
+                  </p>
+                  <div class="artist-names">
+                    <% for(let artist = 0; artist < track[2].length; artist++) { %>
+                      <p class="artist-name">
+                        <%= track[2][artist] %>
+                      </p>
+                      <% if(artist != track[2].length-1) { %>
+                        <p class="artist-name">,</p>
+                      <% } %>
+                    <% }; %>
+                  </div>
+                <% } %>
+              </div>
             </div>
           </form>
         <% }); %>

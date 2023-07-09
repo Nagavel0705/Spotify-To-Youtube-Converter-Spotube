@@ -146,6 +146,7 @@ app.post("/myPlaylists", async function (req, res) {
 app.post("/getUserPlaylistSongs", async function (req, res) {
   const playlistID = req.body.playlistId;
   const playlistName = req.body.playlistName;
+  const playlistImg = req.body.playlistImg;
 
   const tracks = [];
 
@@ -166,7 +167,7 @@ app.post("/getUserPlaylistSongs", async function (req, res) {
 
   // console.log(tracks);
   console.log(playlistName, playlistID);
-  res.render("MyPlaylistTracks", { playlistName: playlistName, tracks: tracks });
+  res.render("MyPlaylistTracks", { playlistImg: playlistImg, playlistName: playlistName, tracks: tracks });
 });
 
 app.listen(3000, () =>
