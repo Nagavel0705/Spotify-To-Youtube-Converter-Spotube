@@ -52,8 +52,7 @@ body {
   background: none;
   border: none;
   font-size: 1.5em;
-  margin-left: 20px;
-  margin-right: 20px;
+  margin: 20px 20px 5px 20px;
   text-align: left;
 }
 
@@ -138,5 +137,16 @@ body {
 
   .playlist-name {
     font-size: 20px;
+    margin-bottom: 5px;
+  }
+
+  .artist-names {
+    color: lightgray;
+    margin: 0px 20px 20px 20px;
+    font-size: 12px;
+  }
+
+  .playlist-header {
+    font-size: x-large;
   }
 }
