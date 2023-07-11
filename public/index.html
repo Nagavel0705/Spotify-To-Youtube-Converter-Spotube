@@ -9,7 +9,10 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="index-body">
+    <div id="loader">
+        <img src="giphy.webp" alt="Preloader GIF" class="preloader-dimensions">
+    </div>
     <div id="home-div">
         <h1>Welcome to Spotube O-O</h1>
         <h2>Plis login with Spotify</h2>
@@ -17,6 +20,12 @@
             <button type="submit">LOGIN</button>
         </form>
     </div>
+    <script>
+        var loader = document.getElementById("loader");
+        window.addEventListener("load", function () {
+            loader.style.visibility = "hidden";
+        });
+    </script>
 </body>
 
 </html>

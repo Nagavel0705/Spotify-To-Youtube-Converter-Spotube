@@ -8,6 +8,33 @@ body {
   justify-content: center;
 }
 
+/* STYLES FOR index.html */
+
+#loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.preloader-dimensions{
+  width: 400px;
+  height: 400px;
+}
+
+.index-body{
+  margin: 0px;
+}
+
+.clip-container{
+  position: absolute;
+}
+
+.intro-clip{
+  margin-top: 40px;
+  width: 100%;
+}
+
 /* STYLES FOR MyPlaylist.ejs */
 .my-playlists-div {
   text-align: center;
@@ -146,6 +173,12 @@ body {
 }
 
 @media screen and (max-width: 500px) {
+
+  .preloader-dimensions{
+    width: 300px;
+    height: 300px;
+  }
+
   .my-playlists-div {
     text-align: center;
     margin: 3em 1em;
@@ -171,5 +204,12 @@ body {
 
   .playlist-header {
     font-size: x-large;
+  }
+}
+
+@media screen and (max-width: 390px){
+  .preloader-dimensions{
+    width: 250px;
+    height: 250px;
   }
 }

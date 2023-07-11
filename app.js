@@ -174,7 +174,7 @@ app.post("/getUserPlaylistSongs", async function (req, res) {
 
 app.post("/convertTrackToYoutube", async function (req, res) {
   const youtubeKey = process.env.YOUTUBE_KEY;
-  const songName = req.body.songName;
+  const songName = req.body.songName + " " + req.body.primaryArtistName;
 
   youtube.search.list({
     key: youtubeKey,

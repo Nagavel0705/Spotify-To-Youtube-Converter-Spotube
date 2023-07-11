@@ -1,17 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spotube</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+    <div id="loader">
+        <img src="giphy.webp" alt="Preloader GIF" width="40%" height="40%">
+    </div>
     <div class="home-div">
         <h1>Welcome <%= name %></h1>
         <form action="/myPlaylists" method="post">
             <button type="submit">Get My playlists</button>
         </form>
     </div>
+
+    <script>
+        var loader = document.getElementById("loader");
+
+        window.addEventListener("load", function () {
+            loader.style.visibility = "hidden";
+        });
+    </script>
 </body>
+
 </html>
