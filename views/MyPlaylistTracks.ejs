@@ -6,6 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spotube</title>
     <link rel="stylesheet" href="style.css">
+    <script>
+      // REMOVES THE ONCLICK ATTRIBUTE FROM THE SONGS NOT AVAILABLE (THEIR CLASS IS .playlist-name UNLIKE 
+      // OTHER ELEMENTS WITH CLASS .track-name) TO PREVENT FORM SUBMISSION
+      document.addEventListener('DOMContentLoaded', function() {
+        var playlistElements = document.querySelectorAll('.playlist-elements');
+        playlistElements.forEach(function(element) {
+          var playlistName = element.querySelector('p.playlist-name');
+          if (playlistName) {
+            element.removeAttribute('onclick');
+          }
+        });
+      });
+    </script>
 </head>
 
 <body>
@@ -15,16 +28,18 @@
     </div>
     <div class="my-playlists-div">
         <% tracks.forEach(track => { %>
-          <form action="/convertToYoutube" method="POST">
+          <form action="/convertTrackToYoutube" method="POST">
             <div class="playlist-elements" onclick="this.parentNode.submit()">
               <img class="playlist-banner" src="<%= track[1] %>" alt="Track image">
-
               <div class="track-info">
                 <% if (track[1] === "Spotify_App_Logo.svg.png") { %>
+                  <!-- CLASS IS .playlist-name INSTEAD OF .track-name TO DIFFERENTIATE -->
+                  <!-- BETWEEN VALID AND INVALID SONGS -->
                   <p class="playlist-name">
                     Song Not Available :&#40;
                   </p>
                 <% } else { %>
+                  <input type="hidden" name="songName" value="<%= track[0] %>">
                   <p class="track-name">
                     <%= track[0] %>
                   </p>

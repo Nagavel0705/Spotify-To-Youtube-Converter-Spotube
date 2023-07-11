@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 require("dotenv").config();
 const SpotifyWebApi = require("spotify-web-api-node");
+const youtube = require('@googleapis/youtube').youtube('v3');
 const mongoose = require("mongoose");
 
 mongoose.connect("mongodb://127.0.0.1:27017/spotifyDB");
@@ -168,6 +169,28 @@ app.post("/getUserPlaylistSongs", async function (req, res) {
   // console.log(tracks);
   console.log(playlistName, playlistID);
   res.render("MyPlaylistTracks", { playlistImg: playlistImg, playlistName: playlistName, tracks: tracks });
+});
+
+
+app.post("/convertTrackToYoutube", async function (req, res) {
+  const youtubeKey = process.env.YOUTUBE_KEY;
+  const songName = req.body.songName;
+
+  youtube.search.list({
+    key: youtubeKey,
+    part: 'snippet',
+    q: songName,
+  }).then((response) => {
+    console.log(JSON.stringify(response,null,4));
+
+    const url = `https://www.youtube.com/watch?v=${response.data.items[0].id.videoId}`;
+    const videoName = response.data.items[0].snippet.title;
+    const channelTitle = response.data.items[0].snippet.channelTitle;
+    const thumbnail = response.data.items[0].snippet.thumbnails.high.url;
+    res.render('ConvertedYoutube', {videoName: videoName, videoID: response.data.items[0].id.videoId});
+  }).catch((err) => {
+    console.error(err);
+  });
 });
 
 app.listen(3000, () =>

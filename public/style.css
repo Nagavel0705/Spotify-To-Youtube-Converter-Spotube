@@ -35,7 +35,6 @@ body {
   cursor: pointer;
   transform: scale(1.01);
   transition: cubic-bezier(0.075, 0.82, 0.165, 1) 0.5s;
-  /* background-color: #0f0c29; */
   background-color: #1DB954;
 }
 
@@ -100,6 +99,17 @@ body {
 
 .playlist-header {
   margin-left: 50px;
+}
+
+/* STYLES FOR ConvertedYoutube */
+
+.embedded-body{
+  background-color: black;
+  text-align: center;
+}
+
+#player{
+  margin: 100px 0px;
 }
 
 /* MEDIA STYLES */
