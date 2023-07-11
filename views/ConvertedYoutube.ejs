@@ -9,9 +9,6 @@
 </head>
 
 <body class="embedded-body">
-    <div id="loader">
-        <img src="giphy.webp" alt="Preloader GIF" width="40%" height="40%">
-    </div>
     <div id="player"></div>
 
     <script>
@@ -64,12 +61,6 @@
                 document.getElementById("player").style.boxShadow = "0px 0px 50px 10px" + color;
             }
         }
-
-        var loader = document.getElementById("loader");
-
-        window.addEventListener("load", function() {
-            loader.style.visibility = "hidden";
-        });
     </script>
 </body>
 

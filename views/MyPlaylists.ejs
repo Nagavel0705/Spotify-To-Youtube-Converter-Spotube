@@ -9,9 +9,6 @@
 </head>
 
 <body>
-  <div id="loader">
-    <img src="giphy.webp" alt="Preloader GIF" width="40%" height="40%">
-  </div>
   <h1 style="margin-top: 60px;">Your Playlists</h1>
   <div class="my-playlists-div">
     <% playlists.forEach(playlist=> { %>
@@ -28,13 +25,6 @@
       </form>
       <% }); %>
   </div>
-  <script>
-    var loader = document.getElementById("loader");
-
-    window.addEventListener("load", function() {
-        loader.style.visibility = "hidden";
-    });
-  </script>
 </body>
 
 </html>
