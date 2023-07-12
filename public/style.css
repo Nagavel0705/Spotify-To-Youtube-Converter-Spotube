@@ -1,7 +1,6 @@
 body {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color: white;
-  /* background-color: #0f0c29; */
   background-color: black;
   text-align: center;
   align-items: center;
@@ -104,12 +103,23 @@ body {
 /* STYLES FOR ConvertedYoutube */
 
 .embedded-body{
-  background-color: black;
-  text-align: center;
+  overflow-y: hidden;
 }
 
+.player-style {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; 
+  /* 16:9 Aspect Ratio (divide 9 by 16 = 0.5625) */
+}
+
+/* Then style the iframe to fit in the container div with full height and width */
 #player{
-  margin: 100px 0px;
+  position: absolute;
+  top: 100px;
+  left: 20%;
+  width: 60%;
+  height: 60%;
 }
 
 /* MEDIA STYLES */

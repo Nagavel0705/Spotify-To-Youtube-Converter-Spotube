@@ -5,17 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spotube</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../public/style.css">
 </head>
 
 <body class="embedded-body">
-    <div id="player"></div>
+    
+    <div class="player-style">
+        <div id="player"></div>
+    </div>
 
     <script>
 
         // Obtaining the video ID and name from the server
-        const videoID = "<%= videoID %>";
-        const videoName = "<%= videoName %>";
+        // const videoID = "<%= videoID %>";
+        // const videoName = "<%= videoName %>";
 
         // This code loads the IFrame Player API code asynchronously.
         // into the head of the document.
@@ -30,9 +33,7 @@
         var player;
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                height: '390',
-                width: '640',
-                videoId: videoID,
+                videoId: "k49gVD-2hio",
                 playerVars: {
                     'playsinline': 1
                 },
