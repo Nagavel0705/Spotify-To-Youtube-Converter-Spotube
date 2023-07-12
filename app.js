@@ -149,7 +149,7 @@ app.post("/getUserPlaylistSongs", async function (req, res) {
   const playlistName = req.body.playlistName;
   const playlistImg = req.body.playlistImg;
 
-  const tracks = [];
+  tracks = [];
 
   const trackData = await spotifyApi.getPlaylistTracks(playlistID);
 
@@ -171,6 +171,9 @@ app.post("/getUserPlaylistSongs", async function (req, res) {
   res.render("MyPlaylistTracks", { playlistImg: playlistImg, playlistName: playlistName, tracks: tracks });
 });
 
+app.post("/convertPlaylistToYoutube", async function (req, res) {
+  console.log(tracks);
+});
 
 app.post("/convertTrackToYoutube", async function (req, res) {
   const youtubeKey = process.env.YOUTUBE_KEY;

@@ -60,6 +60,14 @@ body {
 
 /* STYLES FOR MyPlaylistTracks.ejs */
 
+.convert-button{
+  margin: 20px 0px;
+  padding: 20px;
+  border-radius: 20px;
+  font-size: large;
+  font-weight: bold;
+}
+
 .track-info {
   display: flex;
   flex-direction: column;
