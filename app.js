@@ -43,6 +43,8 @@ const scopes = [
   "user-follow-modify",
 ];
 
+const youtubeKey = process.env.YOUTUBE_KEY;
+
 const spotifyApi = new SpotifyWebApi({
   redirectUri: "http://localhost:3000/callback",
   clientId: process.env.clientID,
@@ -146,8 +148,8 @@ app.post("/myPlaylists", async function (req, res) {
 
 app.post("/getUserPlaylistSongs", async function (req, res) {
   const playlistID = req.body.playlistId;
-  const playlistName = req.body.playlistName;
-  const playlistImg = req.body.playlistImg;
+  playlistName = req.body.playlistName;
+  playlistImg = req.body.playlistImg;
 
   tracks = [];
 
@@ -172,11 +174,35 @@ app.post("/getUserPlaylistSongs", async function (req, res) {
 });
 
 app.post("/convertPlaylistToYoutube", async function (req, res) {
-  console.log(tracks);
+  let youtubePlaylist = [];
+  for (const track of tracks) {
+    if (track[1] === "Spotify_App_Logo.svg.png") {
+      continue;
+    }
+    try {
+      const response = await youtube.search.list({
+        key: youtubeKey,
+        part: 'snippet',
+        q: track[0] + " " + track[2][0],
+      });
+      
+      const url = `https://www.youtube.com/watch?v=${response.data.items[0].id.videoId}`;
+      const videoName = response.data.items[0].snippet.title;
+      const channelTitle = response.data.items[0].snippet.channelTitle;
+      const thumbnail = response.data.items[0].snippet.thumbnails.high.url;
+      youtubePlaylist.push([url, videoName, channelTitle, thumbnail]);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  console.log(youtubePlaylist);
+
+  res.render('ConvertedYoutubePlaylist', {playlistImg: playlistImg, playlistName: playlistName, youtubePlaylist: youtubePlaylist});
+
 });
 
 app.post("/convertTrackToYoutube", async function (req, res) {
-  const youtubeKey = process.env.YOUTUBE_KEY;
   const songName = req.body.songName;
 
   youtube.search.list({
@@ -185,12 +211,7 @@ app.post("/convertTrackToYoutube", async function (req, res) {
     q: songName,
   }).then((response) => {
     console.log(JSON.stringify(response,null,4));
-
-    const url = `https://www.youtube.com/watch?v=${response.data.items[0].id.videoId}`;
-    const videoName = response.data.items[0].snippet.title;
-    const channelTitle = response.data.items[0].snippet.channelTitle;
-    const thumbnail = response.data.items[0].snippet.thumbnails.high.url;
-    res.render('ConvertedYoutube', {videoName: videoName, videoID: response.data.items[0].id.videoId});
+    res.render('ConvertedYoutubeSongs', {videoID: response.data.items[0].id.videoId});
   }).catch((err) => {
     console.error(err);
   });
