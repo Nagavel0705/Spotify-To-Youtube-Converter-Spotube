@@ -125,7 +125,7 @@ app.get("/callback", (req, res) => {
           { email: global_email },
           { accessToken: access_token }
         );
-      }, 3599000);
+      }, 3500000);
     })
     .catch((error) => {
       console.error("Error getting Tokens:", error);
@@ -133,6 +133,8 @@ app.get("/callback", (req, res) => {
     });
 });
 
+
+// DISPLAYING THE PLAYLISTS IN THE USER'S SPOTIFY LIBRARY
 app.post("/myPlaylists", async function (req, res) {
   const user = await User.findOne({ email: global_email });
 
@@ -152,6 +154,31 @@ app.post("/myPlaylists", async function (req, res) {
   res.render("MyPlaylists", { playlists: playlists });
 });
 
+// DISPLAYING THE PREVIOUSLY CONVERTED PLAYLISTS
+app.post("/myConvertedPlaylists", async function (req, res) {
+  const user = await User.findOne({ email: global_email});
+
+  let prevConverts = [];
+
+  user.convertedPlaylists.forEach(playlist => {
+    prevConverts.push([playlist[0][0], playlist[0][1]]);
+  });
+
+  res.render("MyConvertedPlaylists", {prevConverts: prevConverts});
+});
+
+// DISPLAYING THE YOUTUBE SONGS IN THE PREVIOUSLY CONVERTED PLAYLIST
+app.post("/getPrevConvertedPlaylistsSongs", async function (req, res) {
+  const user = await User.findOne({ email: global_email});
+  const playlistName = req.body.playlistName;
+  user.convertedPlaylists.forEach(playlist => {
+    if(playlist[0][1] === playlistName) {
+      res.render('MyConvertedPlaylistTracks', {youtubePlaylist: playlist});
+    }
+  });
+});
+
+// RETRIEVING THE SONGS IN THE USER'S SPECIFIED SPOTIFY PLAYLIST
 app.post("/getUserPlaylistSongs", async function (req, res) {
   const playlistID = req.body.playlistId;
   const playlistName = req.body.playlistName;
@@ -179,6 +206,7 @@ app.post("/getUserPlaylistSongs", async function (req, res) {
   res.render("MyPlaylistTracks", { playlistImg: playlistImg, playlistName: playlistName, tracks: tracks });
 });
 
+// CONVERTING AN ENTIRE SPOTIFY PLAYLIST TO YOUTUBE
 app.post("/convertPlaylistToYoutube", async function (req, res) {
   let youtubePlaylist = [];
   const playlistName = req.body.playlistName;
@@ -230,6 +258,7 @@ app.post("/convertPlaylistToYoutube", async function (req, res) {
   res.render('ConvertedYoutubePlaylist', {playlistImg: playlistImg, playlistName: playlistName, youtubePlaylist: youtubePlaylist.slice(1)});
 });
 
+// CONVERTING A SPECIFIC SONG TO YOUTUBE
 app.post("/convertTrackToYoutube", async function (req, res) {
   const songName = req.body.songName;
 

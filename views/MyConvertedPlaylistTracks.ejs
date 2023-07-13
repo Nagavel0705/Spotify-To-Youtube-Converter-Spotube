@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotube</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="playlist-header-div">
+      <img src="<%= youtubePlaylist[0][0] %>" alt="Playlist banner" width="150px" height="150px"/>
+      <h1 class="playlist-header"><%= youtubePlaylist[0][1] %></h1>
+    </div>
+    <div class="my-playlists-div yt-my-playlists-div">
+        <% youtubePlaylist.slice(1).forEach(track => { %>
+            <div class="playlist-elements yt-playlist-elements">
+              <img class="playlist-banner yt-playlist-banner" src="<%= track[3] %>" alt="Track image">
+              <div class="track-info">
+                  <a href="<%= track[0] %>" class="track-name yt-track-name">
+                    <%= track[1] %>
+                  </a>
+                  <div class="artist-names yt-artist-names">
+                    <p class="artist-name"><%= track[2] %></p>
+                  </div>
+              </div>
+            </div>
+        <% }); %>
+      </div>      
+</body>
+
+</html>
