@@ -25,7 +25,6 @@ h1{
 
 .profile-div{
   margin: 40px 150px 40px 40px;
-  /* border: 1px solid; */
   border-radius: 20px;
   padding: 20px;
 }
@@ -48,6 +47,7 @@ h1{
 .options{
   margin: 15px;
   padding: 10px;
+  width: 200px;
   border-radius: 10px;
   background-color: black;
   color: white;
@@ -63,7 +63,6 @@ h1{
 
 .playlist-link-input{
   display: flex;
-  align-items: center;
   justify-content: center;
 }
 
@@ -80,7 +79,7 @@ h1{
 
 #playlistLink{
   padding: 10px 15px;
-  display: inline;
+  /* display: inline; */
   background-color: black;
   color: white;
   border: none;
@@ -248,6 +247,15 @@ h1{
   .yt-my-playlists-div{
     box-shadow: 0px 0px 50px #ff0000;
   }
+
+  .profile-div{
+    margin: 40px 10px 40px 40px;
+  }
+
+  .convert-options{
+    margin: 50px 50px 0px 50px;
+    padding: 10px;
+  }
 }
 
 @media screen and (max-width: 820px) {
@@ -293,9 +301,37 @@ h1{
     text-decoration: none;
     font-size: 1em;
   }
+  
   .yt-artist-names {
     color: lightgray;
     margin: 0px 20px 10px 20px;
+  }
+
+  .home-div{
+    text-align: center;
+    display: block;
+    /* padding: 20px; */
+    margin: 10px 0px 20px 0px;
+  }
+
+  .profile-div{
+    margin: auto;
+  }
+
+  .profile-picture{
+    border: 1px solid;
+    border-radius: 50%;
+    height: 200px;
+    width: 200px;
+    margin: 50px auto;
+  }
+
+  .convert-options{
+    margin: auto;
+  }
+
+  .playlist-link-input{
+    margin-bottom: 30px;
   }
 }
 
@@ -338,12 +374,29 @@ h1{
     width: 250px;
     margin-bottom: 0px; 
   }
+
+  .playlist-link-input{
+    display: block;
+  }
+
+  #playlistLink{
+    display: block;
+    margin: auto;
+  }
 }
 
 @media screen and (max-width: 300px) {
   .yt-playlist-banner{
     height: 100px;
     width: 150px;
-    margin-bottom: 0px; 
+  }
+
+  .options{
+    width: auto;
+  }
+  
+  .convert-options{
+    margin: auto;
+    width: 200px;
   }
 }
