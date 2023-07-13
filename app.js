@@ -14,6 +14,7 @@ const User = mongoose.model("User", {
   id: String,
   accessToken: String,
   refreshToken: String,
+  convertedPlaylists: Array,
 });
 
 const app = express();
@@ -23,24 +24,24 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const scopes = [
   "ugc-image-upload",
-  "user-read-playback-state",
-  "user-modify-playback-state",
-  "user-read-currently-playing",
-  "streaming",
-  "app-remote-control",
+  // "user-read-playback-state",
+  // "user-modify-playback-state",
+  // "user-read-currently-playing",
+  // "streaming",
+  // "app-remote-control",
   "user-read-email",
   "user-read-private",
   "playlist-read-collaborative",
-  "playlist-modify-public",
+  // "playlist-modify-public",
   "playlist-read-private",
-  "playlist-modify-private",
-  "user-library-modify",
+  // "playlist-modify-private",
+  // "user-library-modify",
   "user-library-read",
-  "user-top-read",
-  "user-read-playback-position",
-  "user-read-recently-played",
-  "user-follow-read",
-  "user-follow-modify",
+  // "user-top-read",
+  // "user-read-playback-position",
+  // "user-read-recently-played",
+  // "user-follow-read",
+  // "user-follow-modify",
 ];
 
 const youtubeKey = process.env.YOUTUBE_KEY;
@@ -63,7 +64,6 @@ app.get("/login", (req, res) => {
 app.get("/callback", (req, res) => {
   const error = req.query.error;
   const code = req.query.code;
-  const state = req.query.state;
 
   if (error) {
     console.error("Callback Error:", error);
@@ -91,18 +91,24 @@ app.get("/callback", (req, res) => {
 
         global_email = me.body.email;
 
-        // console.log(me);
+        // console.log(JSON.stringify(me, null, 4));
 
-        const user = new User({
-          email: global_email,
-          id: me.body.id,
-          accessToken: access_token,
-          refreshToken: refresh_token,
-        });
+        const isUserExisting = await User.findOne({ email: global_email });
 
-        user.save();
+        if(!isUserExisting) {
+          const user = new User({
+            email: global_email,
+            id: me.body.id,
+            accessToken: access_token,
+            refreshToken: refresh_token,
+          });
 
-        res.render("welcome", { name: me.body["display_name"] });
+          user.save();
+        } else{
+          await User.findOneAndUpdate({email: global_email}, {accessToken: access_token, refreshToken: refresh_token});
+        }
+
+        res.render("welcome", { profilePic: me.body.images[1]["url"], name: me.body["display_name"] });
       } catch (e) {
         console.error(e);
       }
@@ -119,7 +125,7 @@ app.get("/callback", (req, res) => {
           { email: global_email },
           { accessToken: access_token }
         );
-      }, 3600000);
+      }, 3599000);
     })
     .catch((error) => {
       console.error("Error getting Tokens:", error);
@@ -148,8 +154,8 @@ app.post("/myPlaylists", async function (req, res) {
 
 app.post("/getUserPlaylistSongs", async function (req, res) {
   const playlistID = req.body.playlistId;
-  playlistName = req.body.playlistName;
-  playlistImg = req.body.playlistImg;
+  const playlistName = req.body.playlistName;
+  const playlistImg = req.body.playlistImg;
 
   tracks = [];
 
@@ -175,31 +181,53 @@ app.post("/getUserPlaylistSongs", async function (req, res) {
 
 app.post("/convertPlaylistToYoutube", async function (req, res) {
   let youtubePlaylist = [];
-  for (const track of tracks) {
-    if (track[1] === "Spotify_App_Logo.svg.png") {
-      continue;
+  const playlistName = req.body.playlistName;
+  const playlistImg = req.body.playlistImg;
+  let flag = 0;
+
+
+  // TO CHECK IF THE USER HAS ALREADY CONVERTED THE PLAYLIST BEFORE
+  await User.findOne({ email: global_email })
+            .then(user => {
+              user.convertedPlaylists.forEach(playlist => {
+                if(playlist[0][1] === playlistName) {
+                  youtubePlaylist = playlist;
+                  flag = 1;
+                  console.log("Not calling Youtube API");
+                }
+              });
+            });
+
+  if(flag === 0) {
+    youtubePlaylist.push([playlistImg, playlistName]);
+
+    for (const track of tracks) {
+      if (track[1] === "Spotify_App_Logo.svg.png") {
+        continue;
+      }
+      try {
+        const response = await youtube.search.list({
+          key: youtubeKey,
+          part: 'snippet',
+          q: track[0] + " " + track[2][0],
+        });
+        
+        const url = `https://www.youtube.com/watch?v=${response.data.items[0].id.videoId}`;
+        const videoName = response.data.items[0].snippet.title;
+        const channelTitle = response.data.items[0].snippet.channelTitle;
+        const thumbnail = response.data.items[0].snippet.thumbnails.high.url;
+        youtubePlaylist.push([url, videoName, channelTitle, thumbnail]);
+      } catch (err) {
+        console.error(err);
+      }
     }
-    try {
-      const response = await youtube.search.list({
-        key: youtubeKey,
-        part: 'snippet',
-        q: track[0] + " " + track[2][0],
-      });
-      
-      const url = `https://www.youtube.com/watch?v=${response.data.items[0].id.videoId}`;
-      const videoName = response.data.items[0].snippet.title;
-      const channelTitle = response.data.items[0].snippet.channelTitle;
-      const thumbnail = response.data.items[0].snippet.thumbnails.high.url;
-      youtubePlaylist.push([url, videoName, channelTitle, thumbnail]);
-    } catch (err) {
-      console.error(err);
-    }
+
+    // console.log(youtubePlaylist);
+
+    await User.findOneAndUpdate({email: global_email}, {$push: {convertedPlaylists: youtubePlaylist}});
   }
 
-  console.log(youtubePlaylist);
-
-  res.render('ConvertedYoutubePlaylist', {playlistImg: playlistImg, playlistName: playlistName, youtubePlaylist: youtubePlaylist});
-
+  res.render('ConvertedYoutubePlaylist', {playlistImg: playlistImg, playlistName: playlistName, youtubePlaylist: youtubePlaylist.slice(1)});
 });
 
 app.post("/convertTrackToYoutube", async function (req, res) {

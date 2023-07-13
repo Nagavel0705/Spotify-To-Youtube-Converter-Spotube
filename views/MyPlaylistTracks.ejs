@@ -30,7 +30,8 @@
     <div class="my-playlists-div">
 
       <form action="/convertPlaylistToYoutube" method="post">
-        <input type="hidden" name="playlistContents" value="<%= tracks %>">
+        <input type="hidden" name="playlistImg" value="<%= playlistImg %>">
+        <input type="hidden" name="playlistName" value="<%= playlistName %>">
         <button type="submit" class="btn btn-outline-danger convert-button">CONVERT ENTIRE PLAYLIST</button>
       </form>
 
