@@ -289,6 +289,40 @@ app.post("/convertTrackToYoutube", async function (req, res) {
   res.render('ConvertedYoutubeSongs', {videoID: videoID});
 });
 
+// CONVERTING SONGS FROM AN EXTERNAL PLAYLIST
+app.post("/externalPlaylist", async function (req, res) {
+  const playlistURL = req.body.playlistLink;
+  const parts = playlistURL.split(/[/?]/);
+  const playlistIndex = parts.findIndex((part) => part === "playlist");
+
+  const playlistID = parts[playlistIndex + 1];
+
+  const playlistData = await spotifyApi.getPlaylist(playlistID);
+  const playlistName = playlistData.body.name;
+  const playlistImg = playlistData.body.images[0].url;
+
+  const trackData = await spotifyApi.getPlaylistTracks(playlistID);
+
+  // console.log(JSON.stringify(trackData, null, 4));
+
+  let tracks = [];
+  for (let song of trackData.body.items) {
+    if (!song.track.album.images[0]) {
+      tracks.push([song.track.name, "Spotify_App_Logo.svg.png", []]);
+    } else {
+      tracks.push([song.track.name, song.track.album.images[0].url, []]);
+    }
+    for (let artist of song.track.artists) {
+      tracks[tracks.length - 1][2].push(artist.name);
+    }
+  }
+
+  // console.log(tracks);
+  console.log(playlistName, playlistID);
+  res.render("MyPlaylistTracks", { playlistImg: playlistImg, playlistName: playlistName, tracks: tracks });
+});
+
+
 app.listen(3000, () =>
   console.log(
     "HTTP Server up. Now go to http://localhost:3000 in your browser."
