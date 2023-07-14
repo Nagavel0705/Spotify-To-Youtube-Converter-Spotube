@@ -211,6 +211,8 @@ h1{
 
 .yt-track-name{
   text-decoration: none;
+  background-color: transparent;
+  border: none;
 }
 
 /* STYLES FOR ConvertedYoutubeSongs.ejs */

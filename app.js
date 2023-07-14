@@ -44,8 +44,8 @@ const spotifyApi = new SpotifyWebApi({
   clientId: process.env.clientID,
   clientSecret: process.env.clientSecret,
 });
-// AUTHORIZATION OF THE USER
 
+// AUTHORIZATION OF THE USER
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html");
 });
@@ -64,6 +64,7 @@ app.get("/callback", (req, res) => {
     return;
   }
 
+  // EXCHANGE THE AUTHORIZATION CODE FOR ACCESS TOKEN AND REFRESH TOKEN 
   spotifyApi
     .authorizationCodeGrant(code)
     .then(async (data) => {
@@ -72,6 +73,7 @@ app.get("/callback", (req, res) => {
       const refresh_token = data.body["refresh_token"];
       const expires_in = data.body["expires_in"];
 
+      // SETTING THE ACCESS AND REFRESH TOKENS
       spotifyApi.setAccessToken(access_token);
       spotifyApi.setRefreshToken(refresh_token);
 
@@ -79,6 +81,14 @@ app.get("/callback", (req, res) => {
         `Sucessfully retreived access token. Expires in ${expires_in} s.`
       );
 
+      // STORING THE LOGGED IN USER TO THE DATABASE IF NOT ALREADY PRESENT
+
+      // THIS IS DONE TO STORE THE ALREADY CONVERTED PLAYLISTS OF THE USER
+      
+      // THIS REDUCES NUMBER OF API CALLS TO YOUTUBE
+      
+      // THIS IS BECAUSE API CALLS ARE EXPENSIVE AND CAN'T AFFORD TO CONVERT 
+      // THE SAME PLAYLIST AGAIN AND AGAIN
       try {
         const me = await spotifyApi.getMe();
 
@@ -101,11 +111,14 @@ app.get("/callback", (req, res) => {
           await User.findOneAndUpdate({email: global_email}, {accessToken: access_token, refreshToken: refresh_token});
         }
 
+        // REDIRECTING TO WELCOME PAGE WHICH DISPLAYS THE USER'S NAME AND PROFILE PICTURE
         res.render("welcome", { profilePic: me.body.images[1]["url"], name: me.body["display_name"] });
       } catch (e) {
         console.error(e);
       }
 
+      // THE ACCESS TOKEN NEEDS TO BE REFRESHED AS IT EXPIRES AFTER 3600 SECONDS
+      // THIS FUNCTION RUNS ASYNCHRONOUSLY EVERY 3500 SECONDS
       setInterval(async () => {
         const data = await spotifyApi.refreshAccessToken();
         const access_token = data.body["access_token"];
@@ -133,12 +146,14 @@ app.post("/myPlaylists", async function (req, res) {
 
   const data = await spotifyApi.getUserPlaylists(user.id);
 
-  console.log("---------------+++++++++++++++++++++++++");
+  console.log("--------------------+++++++++++++++++++++++++");
   let playlists = [];
 
   // console.log(JSON.stringify(data, null, 4));
 
   for (let playlist of data.body.items) {
+    // DISPLAYED ITEMS ARE THE PLAYLIST IMAGE, NAME 
+    // ID IS FOR RETRIEVING THE SONGS IN THE PLAYLIST IN THE NEXT STEP
     playlists.push([playlist.images[0].url, playlist.name, playlist.id]);
   }
 
@@ -151,6 +166,7 @@ app.post("/myPlaylists", async function (req, res) {
 app.post("/myConvertedPlaylists", async function (req, res) {
   const user = await User.findOne({ email: global_email});
 
+  // STORES THE PLAYLIST IMAGE AND NAME FOR ALL THE PREVIOUSLY CONVERTED PLAYLISTS
   let prevConverts = [];
 
   user.convertedPlaylists.forEach(playlist => {
@@ -177,6 +193,10 @@ app.post("/getUserPlaylistSongs", async function (req, res) {
   const playlistName = req.body.playlistName;
   const playlistImg = req.body.playlistImg;
 
+  // THE BELOW ARRAY STORES THE TRACK NAME, TRACK IMAGE AND THE ARTIST NAMES FOR ALL THE 
+  // SONGS IN THE PLAYLIST
+
+  // NOTICE HOW IT IS A GLOBAL VARIABLE !!!!
   tracks = [];
 
   const trackData = await spotifyApi.getPlaylistTracks(playlistID);
@@ -185,6 +205,7 @@ app.post("/getUserPlaylistSongs", async function (req, res) {
 
   for (let song of trackData.body.items) {
     if (!song.track.album.images[0]) {
+      // IF THE SONG HAS BEEN REMOVED BY SPOTIFY, WE FLAG IT BY SETTING IT'S IMAGE TO THE SPOTIFY LOGO
       tracks.push([song.track.name, "Spotify_App_Logo.svg.png", []]);
     } else {
       tracks.push([song.track.name, song.track.album.images[0].url, []]);
@@ -219,6 +240,7 @@ app.post("/convertPlaylistToYoutube", async function (req, res) {
               });
             });
 
+  // MAKING THE API CALL IF THE PLAYLIST HAS NOT BEEN CONVERTED BEFORE
   if(flag === 0) {
     youtubePlaylist.push([playlistImg, playlistName]);
 
@@ -245,10 +267,12 @@ app.post("/convertPlaylistToYoutube", async function (req, res) {
 
     // console.log(youtubePlaylist);
 
+    // ADDING THE CONVERTED PLAYLIST TO THE ARRAY OF CONVERTED PLAYLISTS IN THE USER'S DOCUMENT 
+    // IN THE DATABASE
     await User.findOneAndUpdate({email: global_email}, {$push: {convertedPlaylists: youtubePlaylist}});
   }
 
-  res.render('ConvertedYoutubePlaylist', {playlistImg: playlistImg, playlistName: playlistName, youtubePlaylist: youtubePlaylist.slice(1)});
+  res.render('ConvertedYoutubePlaylist', {youtubePlaylist: youtubePlaylist});
 });
 
 // CONVERTING A SPECIFIC SONG TO YOUTUBE
@@ -258,9 +282,11 @@ app.post("/convertTrackToYoutube", async function (req, res) {
   const playlistName = req.body.playlistName;
   let flag = 0;
   var videoID = "";
-  const user = await User.findOne({email: global_email});
 
+  // CHECKING IF THE SPOTIFY PLAYLIST CONTAINING THE SONG HAS BEEN CONVERTED BEFORE
+  const user = await User.findOne({email: global_email});
   user.convertedPlaylists.forEach(playlist => {
+    // IF IT HAS BEEN CONVERTED BEFORE, THEN THE VIDEO ID IS RETRIEVED FROM THE ARRAY
     if(playlist[0][1] === playlistName) {
       playlist.slice(1).forEach(song => {
         if(song[4] === songName) {
@@ -272,6 +298,8 @@ app.post("/convertTrackToYoutube", async function (req, res) {
     }
   });
 
+
+  // MAKING THE API CALL IF THE PLAYLIST CONTAINING THE SONG HAS NOT BEEN CONVERTED BEFORE
   if(flag === 0) {
     youtube.search.list({
       key: youtubeKey,
@@ -289,14 +317,20 @@ app.post("/convertTrackToYoutube", async function (req, res) {
   res.render('ConvertedYoutubeSongs', {videoID: videoID});
 });
 
-// CONVERTING SONGS FROM AN EXTERNAL PLAYLIST
+// DISPLAYING SONGS FROM AN EXTERNAL PLAYLIST
 app.post("/externalPlaylist", async function (req, res) {
+
+  // THE USER ENTERS THE URL AND WE NEED TO RETRIEVE THE PLAYLIST ID FROM THE URL
   const playlistURL = req.body.playlistLink;
+  // PERFORM STRING SPLITTING USING REGEX
   const parts = playlistURL.split(/[/?]/);
+
+  // THE ID IS ALWAYS PRESENT AFTER THE WORD "playlist" IN THE URL
   const playlistIndex = parts.findIndex((part) => part === "playlist");
 
   const playlistID = parts[playlistIndex + 1];
 
+  // OBTAINING THE PLAYLIST NAME AND IMAGE
   const playlistData = await spotifyApi.getPlaylist(playlistID);
   const playlistName = playlistData.body.name;
   const playlistImg = playlistData.body.images[0].url;
