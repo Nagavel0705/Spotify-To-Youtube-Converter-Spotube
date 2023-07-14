@@ -47,6 +47,7 @@
                     Song Not Available :&#40;
                   </p>
                 <% } else { %>
+                  <input type="hidden" name="playlistName" value="<%= playlistName %>">
                   <input type="hidden" name="songName" value="<%= track[0] %>">
                   <p class="track-name">
                     <%= track[0] %>

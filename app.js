@@ -27,8 +27,6 @@ const scopes = [
   // "user-read-playback-state",
   // "user-modify-playback-state",
   // "user-read-currently-playing",
-  // "streaming",
-  // "app-remote-control",
   "user-read-email",
   "user-read-private",
   "playlist-read-collaborative",
@@ -37,11 +35,6 @@ const scopes = [
   // "playlist-modify-private",
   // "user-library-modify",
   "user-library-read",
-  // "user-top-read",
-  // "user-read-playback-position",
-  // "user-read-recently-played",
-  // "user-follow-read",
-  // "user-follow-modify",
 ];
 
 const youtubeKey = process.env.YOUTUBE_KEY;
@@ -244,7 +237,7 @@ app.post("/convertPlaylistToYoutube", async function (req, res) {
         const videoName = response.data.items[0].snippet.title;
         const channelTitle = response.data.items[0].snippet.channelTitle;
         const thumbnail = response.data.items[0].snippet.thumbnails.high.url;
-        youtubePlaylist.push([url, videoName, channelTitle, thumbnail]);
+        youtubePlaylist.push([url, videoName, channelTitle, thumbnail, track[0]]);
       } catch (err) {
         console.error(err);
       }
@@ -261,17 +254,39 @@ app.post("/convertPlaylistToYoutube", async function (req, res) {
 // CONVERTING A SPECIFIC SONG TO YOUTUBE
 app.post("/convertTrackToYoutube", async function (req, res) {
   const songName = req.body.songName;
+  console.log(songName);
+  const playlistName = req.body.playlistName;
+  let flag = 0;
+  var videoID = "";
+  const user = await User.findOne({email: global_email});
 
-  youtube.search.list({
-    key: youtubeKey,
-    part: 'snippet',
-    q: songName,
-  }).then((response) => {
-    console.log(JSON.stringify(response,null,4));
-    res.render('ConvertedYoutubeSongs', {videoID: response.data.items[0].id.videoId});
-  }).catch((err) => {
-    console.error(err);
+  user.convertedPlaylists.forEach(playlist => {
+    if(playlist[0][1] === playlistName) {
+      playlist.slice(1).forEach(song => {
+        if(song[4] === songName) {
+          flag = 1;
+          console.log("Not Calling API");
+          videoID = song[0].split("=")[1];
+        }
+      });
+    }
   });
+
+  if(flag === 0) {
+    youtube.search.list({
+      key: youtubeKey,
+      part: 'snippet',
+      q: songName,
+    }).then((response) => {
+      // console.log(JSON.stringify(response,null,4));
+      console.log("Calling API");
+      videoID = response.data.items[0].id.videoId;
+    }).catch((err) => {
+      console.error(err);
+    });
+  }
+
+  res.render('ConvertedYoutubeSongs', {videoID: videoID});
 });
 
 app.listen(3000, () =>
