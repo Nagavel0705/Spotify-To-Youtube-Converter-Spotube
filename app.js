@@ -278,9 +278,11 @@ app.post("/convertPlaylistToYoutube", async function (req, res) {
 // CONVERTING A SPECIFIC SONG TO YOUTUBE
 app.post("/convertTrackToYoutube", async function (req, res) {
   const songName = req.body.songName;
-  // console.log(songName);
+  const artistName = req.body.artistName;
+  console.log(songName);
+  console.log(artistName);
   const playlistName = req.body.playlistName;
-  // console.log(playlistName);
+  console.log(playlistName);
   let flag = 0;
   var videoID = "";
 

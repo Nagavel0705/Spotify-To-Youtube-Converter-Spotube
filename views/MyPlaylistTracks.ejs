@@ -48,7 +48,8 @@
                   </p>
                 <% } else { %>
                   <input type="hidden" name="playlistName" value="<%= playlistName %>">
-                  <input type="hidden" name="songName" value="<%= track[0] + " " + track[2][0] %>">
+                  <input type="hidden" name="songName" value="<%= track[0] %>">
+                  <input type="hidden" name="artistName" value="<%= track[2][0] %>">
                   <p class="track-name">
                     <%= track[0] %>
                   </p>
