@@ -278,8 +278,9 @@ app.post("/convertPlaylistToYoutube", async function (req, res) {
 // CONVERTING A SPECIFIC SONG TO YOUTUBE
 app.post("/convertTrackToYoutube", async function (req, res) {
   const songName = req.body.songName;
-  console.log(songName);
+  // console.log(songName);
   const playlistName = req.body.playlistName;
+  // console.log(playlistName);
   let flag = 0;
   var videoID = "";
 
@@ -301,7 +302,7 @@ app.post("/convertTrackToYoutube", async function (req, res) {
 
   // MAKING THE API CALL IF THE PLAYLIST CONTAINING THE SONG HAS NOT BEEN CONVERTED BEFORE
   if(flag === 0) {
-    youtube.search.list({
+    await youtube.search.list({
       key: youtubeKey,
       part: 'snippet',
       q: songName,
@@ -309,6 +310,7 @@ app.post("/convertTrackToYoutube", async function (req, res) {
       // console.log(JSON.stringify(response,null,4));
       console.log("Calling API");
       videoID = response.data.items[0].id.videoId;
+      console.log(videoID);
     }).catch((err) => {
       console.error(err);
     });
