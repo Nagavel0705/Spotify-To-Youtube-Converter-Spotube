@@ -7,13 +7,122 @@ body {
   justify-content: center;
 }
 
-h1{
+/* STYLES FOR index.html */
+.landing-page {
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #1DB954;
+  height: 82vh;
+}
+
+.website-name-div {
+  display: flex;
+  align-items: center;
+  background-color: black;
+  width: 50em;
+  height: 30em;
+  border-radius: 20px;
+  margin-right: 5em;
+  margin-left: 3em;
+  text-align: left;
+}
+
+.website-name {
+  font-size: 2em;
+  color: white;
+  margin-left: 1.5em;
+  margin-right: 1em;
+}
+
+.website-name h1 {
+  font-family: 'Raleway', sans-serif;
+  font-size: 5em;
+  font-weight: 900;
+  margin: 0px;
+  color: rgba(225, 225, 225, .01);
+  background-image: url("download.jpeg");
+  background-repeat: repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: animate 20s ease-in-out infinite;
+}
+
+@keyframes animate {
+
+  0%,
+  100% {
+    background-position: left;
+  }
+
+  25% {
+    background-position: right;
+  }
+
+  50% {
+    background-position: left;
+  }
+
+  75% {
+    background-position: right;
+  }
+}
+
+.website-name:before {
+  content: "Welcome to";
+  font-size: 1em;
+  padding-left: 0.5em;
+}
+
+h1 {
   font-weight: bold;
+}
+
+.login-div-wrapper {
+  display: flex;
+  align-items: center;
+  height: 30em;
+  width: 25em;
+  border-radius: 20px;
+  background-color: #e246ab;
+  padding: 0px 20px;
+  justify-content: center;
+}
+
+.login-div {
+  font-size: 1.2em;
+  word-wrap: break-word;
+  color: black;
+}
+
+.login-div h2{
+  margin-bottom: 10px;
+  margin-top: 0px;
+}
+
+.landing-page-login-button{
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  background-color: black;
+  border: none;
+  border-radius: 50px;
+  color: white;
+  width: 200px;
+  height: 70px;
+  margin: 2em;
+  font-size: x-large;
+  transition: ease-in 0.1s;
+}
+
+.landing-page-login-button:hover{
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: ease-in 0.1s;
 }
 
 /* STYLES FOR welcome.ejs */
 
-.home-div{
+.home-div {
   display: flex;
   align-items: center;
   /* border: 1px solid; */
@@ -23,20 +132,20 @@ h1{
   flex-direction: row;
 }
 
-.profile-div{
+.profile-div {
   margin: 40px 150px 40px 40px;
   border-radius: 20px;
   padding: 20px;
 }
 
-.profile-picture{
+.profile-picture {
   border-radius: 50%;
   height: 200px;
   width: 200px;
   margin: 50px;
 }
 
-.convert-options{
+.convert-options {
   margin: 50px 50px 0px 50px;
   width: 300px;
   padding: 20px;
@@ -44,7 +153,7 @@ h1{
   border-radius: 20px;
 }
 
-.options{
+.options {
   margin: 15px;
   padding: 10px;
   width: 200px;
@@ -55,29 +164,29 @@ h1{
   transition: transform 0.1s ease;
 }
 
-.options:hover{
+.options:hover {
   background-color: black;
   transform: scale(1.1);
   transition: cubic-bezier(0.075, 0.82, 0.165, 1) 0.5s;
 }
 
-.playlist-link-input{
+.playlist-link-input {
   display: flex;
   justify-content: center;
 }
 
-.btn-outline-success{
+.btn-outline-success {
   padding: 12px 10px;
   color: #1DB954;
   margin: 10px;
   border-radius: 10px;
 }
 
-.btn-outline-success:hover{
+.btn-outline-success:hover {
   background-color: #1DB954;
 }
 
-#playlistLink{
+#playlistLink {
   padding: 10px 15px;
   /* display: inline; */
   background-color: black;
@@ -86,12 +195,12 @@ h1{
   font-size: large;
 }
 
-#playlistLink:focus{
+#playlistLink:focus {
   outline: none;
   border-bottom: 1px solid white;
 }
 
-#playlistLink::placeholder{
+#playlistLink::placeholder {
   color: white;
 }
 
@@ -146,7 +255,7 @@ h1{
 
 /* STYLES FOR MyPlaylistTracks.ejs */
 
-.convert-button{
+.convert-button {
   margin: 20px 0px;
   padding: 20px;
   border-radius: 20px;
@@ -196,7 +305,7 @@ h1{
 
 /* STYLES FOR ConvertedYoutubePlaylist.ejs */
 
-.yt-my-playlists-div{
+.yt-my-playlists-div {
   box-shadow: 0px 0px 50px #ff0000;
 }
 
@@ -204,12 +313,12 @@ h1{
   background-color: #ff0000;
 }
 
-.yt-playlist-banner{
+.yt-playlist-banner {
   height: 100px;
   width: 150px;
 }
 
-.yt-track-name{
+.yt-track-name {
   text-decoration: none;
   background-color: transparent;
   border: none;
@@ -217,19 +326,19 @@ h1{
 
 /* STYLES FOR ConvertedYoutubeSongs.ejs */
 
-.embedded-body{
+.embedded-body {
   overflow-y: hidden;
 }
 
 .player-style {
   position: relative;
   width: 100%;
-  padding-top: 56.25%; 
+  padding-top: 56.25%;
   /* 16:9 Aspect Ratio (divide 9 by 16 = 0.5625) */
 }
 
 /* Then style the iframe to fit in the container div with full height and width */
-#player{
+#player {
   position: absolute;
   top: 100px;
   left: 20%;
@@ -246,15 +355,15 @@ h1{
     padding: 20px;
   }
 
-  .yt-my-playlists-div{
+  .yt-my-playlists-div {
     box-shadow: 0px 0px 50px #ff0000;
   }
 
-  .profile-div{
+  .profile-div {
     margin: 40px 10px 40px 40px;
   }
 
-  .convert-options{
+  .convert-options {
     margin: 50px 50px 0px 50px;
     padding: 10px;
   }
@@ -282,45 +391,45 @@ h1{
     text-align: left;
   }
 
-  .yt-my-playlists-div{
+  .yt-my-playlists-div {
     box-shadow: 0px 0px 50px #ff0000;
   }
 
-  .yt-playlist-elements{
+  .yt-playlist-elements {
     display: block;
     text-align: center;
   }
 
-  .yt-playlist-banner{
+  .yt-playlist-banner {
     height: 200px;
     width: 300px;
-    margin-bottom: 0px; 
+    margin-bottom: 0px;
   }
 
-  .yt-track-name{
+  .yt-track-name {
     text-align: center;
     margin-top: 10px;
     text-decoration: none;
     font-size: 1em;
   }
-  
+
   .yt-artist-names {
     color: lightgray;
     margin: 0px 20px 10px 20px;
   }
 
-  .home-div{
+  .home-div {
     text-align: center;
     display: block;
     /* padding: 20px; */
     margin: 10px 0px 20px 0px;
   }
 
-  .profile-div{
+  .profile-div {
     margin: auto;
   }
 
-  .profile-picture{
+  .profile-picture {
     border: 1px solid;
     border-radius: 50%;
     height: 200px;
@@ -328,11 +437,11 @@ h1{
     margin: 50px auto;
   }
 
-  .convert-options{
+  .convert-options {
     margin: auto;
   }
 
-  .playlist-link-input{
+  .playlist-link-input {
     margin-bottom: 30px;
   }
 }
@@ -365,39 +474,39 @@ h1{
     font-size: x-large;
   }
 
-  .yt-my-playlists-div{
+  .yt-my-playlists-div {
     box-shadow: 0px 0px 50px #ff0000;
   }
 }
 
 @media screen and (max-width: 420px) {
-  .yt-playlist-banner{
+  .yt-playlist-banner {
     height: 200px;
     width: 250px;
-    margin-bottom: 0px; 
+    margin-bottom: 0px;
   }
 
-  .playlist-link-input{
+  .playlist-link-input {
     display: block;
   }
 
-  #playlistLink{
+  #playlistLink {
     display: block;
     margin: auto;
   }
 }
 
 @media screen and (max-width: 300px) {
-  .yt-playlist-banner{
+  .yt-playlist-banner {
     height: 100px;
     width: 150px;
   }
 
-  .options{
+  .options {
     width: auto;
   }
-  
-  .convert-options{
+
+  .convert-options {
     margin: auto;
     width: 200px;
   }

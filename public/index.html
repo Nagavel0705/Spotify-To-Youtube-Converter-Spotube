@@ -6,16 +6,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spotube</title>
+    <link href="https://fonts.googleapis.com/css?family=Raleway:900" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
-    <div id="home-div">
-        <h1>Welcome to Spotube O-O</h1>
-        <h2>Plis login with Spotify</h2>
-        <form action="/login" method="get">
-            <button type="submit">LOGIN</button>
-        </form>
+<body style="background-color: black; padding: 50px;">
+    <div class="landing-page">
+        <div class="website-name-div">
+            <div class="website-name">
+                <h1>Spotube</h1>
+            </div>
+        </div>
+        <div class="login-div-wrapper">
+            <div class="login-div">
+                <h2>Please login with</h2>
+                <h2>Spotify</h2>
+                <form action="/login" method="get">
+                    <button type="submit" class="landing-page-login-button">Login</button>
+                </form>
+            </div>
+        </div>
     </div>
 </body>
 
