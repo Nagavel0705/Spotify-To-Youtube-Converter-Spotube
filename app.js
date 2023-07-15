@@ -5,7 +5,7 @@ const SpotifyWebApi = require("spotify-web-api-node");
 const youtube = require('@googleapis/youtube').youtube('v3');
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://127.0.0.1:27017/spotifyDB");
+mongoose.connect("mongodb+srv://" + process.env.ATLAS_USERNAME + ":" + process.env.ATLAS_PASSWORD + "@cluster0.d6xb0qt.mongodb.net/SpotifyDB");
 
 let global_email = ""; // STORING THE CURRENT USER'S EMAIL GLOBALLY FOR ACCESS IN ALL ROUTES
 
@@ -307,7 +307,7 @@ app.post("/convertTrackToYoutube", async function (req, res) {
     await youtube.search.list({
       key: youtubeKey,
       part: 'snippet',
-      q: songName,
+      q: songName+" "+artistName,
     }).then((response) => {
       // console.log(JSON.stringify(response,null,4));
       console.log("Calling API");

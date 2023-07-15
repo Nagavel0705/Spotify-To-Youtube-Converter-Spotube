@@ -11,6 +11,9 @@
 <body>
   <h1 style="margin-top: 60px;">My Spotify Playlists</h1>
   <div class="my-playlists-div">
+    <% if(playlists.length === 0) { %>
+      <p style="margin-top: 20px;">You don't have any Spotify playlists yet</p>
+    <% } %> 
     <% playlists.forEach(playlist=> { %>
       <form action="/getUserPlaylistSongs" method="POST">
         <div class="playlist-elements" onclick="this.parentNode.submit()">
