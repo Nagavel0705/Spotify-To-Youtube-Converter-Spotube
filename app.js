@@ -135,7 +135,7 @@ app.get("/callback", (req, res) => {
     })
     .catch((error) => {
       console.error("Error getting Tokens:", error);
-      res.send(`Error getting Tokens: ${error}`);
+      res.sendFile(__dirname + "/public/error.html")
     });
 });
 
