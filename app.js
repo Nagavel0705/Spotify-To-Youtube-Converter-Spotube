@@ -40,7 +40,7 @@ const scopes = [
 const youtubeKey = process.env.YOUTUBE_KEY;
 
 const spotifyApi = new SpotifyWebApi({
-  redirectUri: "http://localhost:3000/callback",
+  redirectUri: process.env.redirectURI,
   clientId: process.env.clientID,
   clientSecret: process.env.clientSecret,
 });
