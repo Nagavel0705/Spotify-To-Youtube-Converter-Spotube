@@ -400,7 +400,7 @@ h1 {
     box-shadow: 0px 0px 50px #ff0000;
   }
 
-  .yt-playlist-elements {
+  .yt-playlist-elements-tracks {
     display: block;
     text-align: center;
   }
@@ -435,7 +435,6 @@ h1 {
   }
 
   .profile-picture {
-    border: 1px solid;
     border-radius: 50%;
     height: 200px;
     width: 200px;

@@ -16,7 +16,7 @@
     <div class="my-playlists-div yt-my-playlists-div">
       <% youtubePlaylist.slice(1).forEach(track=> { %>
         <form action="/convertTrackToYoutube" method="post">
-          <div class="playlist-elements yt-playlist-elements" onclick="this.parentNode.submit()">
+          <div class="playlist-elements yt-playlist-elements yt-playlist-elements-tracks" onclick="this.parentNode.submit()">
             <img class="playlist-banner yt-playlist-banner" src="<%= track[3] %>" alt="Track image">
             <div class="track-info">
               <input type="hidden" name="songName" value="<%= track[4] %>">
