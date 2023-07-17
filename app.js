@@ -8,6 +8,8 @@ const mongoose = require("mongoose");
 mongoose.connect("mongodb+srv://" + process.env.ATLAS_USERNAME + ":" + process.env.ATLAS_PASSWORD + "@cluster0.d6xb0qt.mongodb.net/SpotifyDB");
 
 let global_email = ""; // STORING THE CURRENT USER'S EMAIL GLOBALLY FOR ACCESS IN ALL ROUTES
+// NOTICE HOW IT IS A GLOBAL VARIABLE !!!!
+let tracks = [];
 
 const User = mongoose.model("User", {
   email: String,
@@ -196,13 +198,11 @@ app.post("/getUserPlaylistSongs", async function (req, res) {
   // THE BELOW ARRAY STORES THE TRACK NAME, TRACK IMAGE AND THE ARTIST NAMES FOR ALL THE 
   // SONGS IN THE PLAYLIST
 
-  // NOTICE HOW IT IS A GLOBAL VARIABLE !!!!
-  tracks = [];
-
   const trackData = await spotifyApi.getPlaylistTracks(playlistID);
 
   // console.log(JSON.stringify(trackData, null, 4));
 
+  tracks=[];
   for (let song of trackData.body.items) {
     if (!song.track.album.images[0]) {
       // IF THE SONG HAS BEEN REMOVED BY SPOTIFY, WE FLAG IT BY SETTING IT'S IMAGE TO THE SPOTIFY LOGO
@@ -343,7 +343,7 @@ app.post("/externalPlaylist", async function (req, res) {
 
   // console.log(JSON.stringify(trackData, null, 4));
 
-  let tracks = [];
+  tracks = [];
   for (let song of trackData.body.items) {
     if (!song.track.album.images[0]) {
       tracks.push([song.track.name, "Spotify_App_Logo.svg.png", []]);
