@@ -75,13 +75,13 @@ h1 {
   padding: 12.4vw 3vw;
 }
 
-.login-div h2{
+.login-div h2 {
   margin-bottom: 3vw;
   margin-top: 0px;
   font-size: 2vw;
 }
 
-.landing-page-login-button{
+.landing-page-login-button {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   background-color: black;
   border: none;
@@ -92,7 +92,7 @@ h1 {
   transition: ease-in 0.1s;
 }
 
-.landing-page-login-button:hover{
+.landing-page-login-button:hover {
   cursor: pointer;
   transform: scale(1.05);
   transition: ease-in 0.1s;
@@ -171,6 +171,7 @@ h1 {
   color: white;
   border: none;
   font-size: large;
+  text-align: center;
 }
 
 #playlistLink:focus {
@@ -326,7 +327,7 @@ h1 {
 
 /* Error page */
 
-.error-container{
+.error-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -338,12 +339,12 @@ h1 {
 /* MEDIA STYLES */
 
 @media screen and (max-width: 1024px) {
-  .website-name{
+  .website-name {
     margin: 5vw 2vw;
     padding: 10vw 18vw;
   }
 
-  .login-div{
+  .login-div {
     margin: 5vw 2vw;
     padding-left: 25vw;
     padding-right: 25vw;
@@ -370,17 +371,17 @@ h1 {
 }
 
 @media screen and (max-width: 820px) {
-  .landing-page{
+  .landing-page {
     padding: 0vw 5vw;
   }
 
-  .website-name{
+  .website-name {
     margin: 5vw 5vw;
     padding-left: 10vw;
     padding-right: 10vw;
   }
 
-  .login-div{
+  .login-div {
     margin: 5vw 2vw;
     padding-left: 17vw;
     padding-right: 17vw;
@@ -462,28 +463,29 @@ h1 {
 }
 
 @media screen and (max-width: 500px) {
-  .landing-page{
+  .landing-page {
     padding: 5vw;
   }
 
-  .website-name{
+  .website-name {
     margin: 5vw 5vw;
     padding: 20vw 6vw;
   }
 
-  .login-div{
+  .login-div {
     margin: 5vw 2vw;
     padding: 10vw 15vw;
   }
 
-  .login-div h2{
+  .login-div h2 {
     font-size: 10px;
   }
 
-  .landing-page-login-button{
+  .landing-page-login-button {
     font-size: 10px;
     padding: 5px 10px;
   }
+
   .my-playlists-div {
     text-align: center;
     margin: 3em 1em;
@@ -515,21 +517,21 @@ h1 {
     box-shadow: 0px 0px 50px #ff0000;
   }
 
-  .error-image{
+  .error-image {
     width: 90vw;
   }
 }
 
 @media screen and (max-width: 420px) {
-  .landing-page{
+  .landing-page {
     padding: 20px;
   }
 
-  .website-name{
+  .website-name {
     margin: 20px;
   }
 
-  .login-div{
+  .login-div {
     margin: 15px;
   }
 
