@@ -114,7 +114,7 @@ app.get("/callback", (req, res) => {
         }
 
         // REDIRECTING TO WELCOME PAGE WHICH DISPLAYS THE USER'S NAME AND PROFILE PICTURE
-        res.render("welcome", { profilePic: me.body.images[1]["url"], name: me.body["display_name"] });
+        res.render("welcome", { profilePic: me.body.images[1]["url"], name: me.body["display_name"], error: ""});
       } catch (e) {
         console.error(e);
       }
@@ -335,29 +335,34 @@ app.post("/externalPlaylist", async function (req, res) {
   const playlistID = parts[playlistIndex + 1];
 
   // OBTAINING THE PLAYLIST NAME AND IMAGE
-  const playlistData = await spotifyApi.getPlaylist(playlistID);
-  const playlistName = playlistData.body.name;
-  const playlistImg = playlistData.body.images[0].url;
+  spotifyApi.getPlaylist(playlistID)
+    .then(async (playlistData) => {
+      const playlistName = playlistData.body.name;
+      const playlistImg = playlistData.body.images[0].url;
 
-  const trackData = await spotifyApi.getPlaylistTracks(playlistID);
+      const trackData = await spotifyApi.getPlaylistTracks(playlistID);
 
-  // console.log(JSON.stringify(trackData, null, 4));
+      // console.log(JSON.stringify(trackData, null, 4));
 
-  tracks = [];
-  for (let song of trackData.body.items) {
-    if (!song.track.album.images[0]) {
-      tracks.push([song.track.name, "Spotify_App_Logo.svg.png", []]);
-    } else {
-      tracks.push([song.track.name, song.track.album.images[0].url, []]);
-    }
-    for (let artist of song.track.artists) {
-      tracks[tracks.length - 1][2].push(artist.name);
-    }
-  }
+      tracks = [];
+      for (let song of trackData.body.items) {
+        if (!song.track.album.images[0]) {
+          tracks.push([song.track.name, "Spotify_App_Logo.svg.png", []]);
+        } else {
+          tracks.push([song.track.name, song.track.album.images[0].url, []]);
+        }
+        for (let artist of song.track.artists) {
+          tracks[tracks.length - 1][2].push(artist.name);
+        }
+      }
 
-  // console.log(tracks);
-  console.log(playlistName, playlistID);
-  res.render("MyPlaylistTracks", { playlistImg: playlistImg, playlistName: playlistName, tracks: tracks });
+      // console.log(tracks);
+      console.log(playlistName, playlistID);
+      res.render("MyPlaylistTracks", { playlistImg: playlistImg, playlistName: playlistName, tracks: tracks });
+    }).catch((err) => {
+      console.log(err.body.error.message);
+      res.render('welcome', { profilePic: req.body.profilePicFeedback, name: req.body.nameFeedback, error: err.body.error.message});
+    });
 });
 
 

@@ -25,8 +25,35 @@
     <div class="playlist-link-input">
         <form action="/externalPlaylist" method="post">
             <input type="text" name="playlistLink" id="playlistLink" placeholder="Enter external playlist link" autocomplete="off">
+            <input type="hidden" name="nameFeedback" value="<%= name %>">
+            <input type="hidden" name="profilePicFeedback" value="<%= profilePic %>">
             <button type="submit" class="btn btn-outline-success" style="border: 2px solid #1DB954;">Convert</button>
         </form>
     </div>
+
+    <script>
+
+        // SO WE SHOW AN ALERT IF THE USER ENTERS AN INVALID PLAYLIST LINK
+        // THE USER FIXES IT AND MOVES FORWARD BUT COMES BACK TO THIS PAGE LATER USING THE BACK BUTTONS
+        // WE DON'T WANT TO SHOW THE ALERT AGAIN
+        // SO WE CHECK IF THE PAGE WAS LOADED FROM THE CACHE(ARRIVED AT THROUGH BACK BUTTONS) OR NOT
+        // IF IT WAS LOADED FROM THE CACHE, WE DON'T SHOW THE ALERT
+        const error = '<%= error %>'
+        const isLoadedFromCache = performance.getEntriesByType("navigation")[0].type === "back_forward";
+        (error != "" && !isLoadedFromCache) && alert("Please enter a playlist link containing a valid playlist ID");
+
+        // SO WE DON'T SUBMIT THE FORM IF THE INPUT IS EMPTY
+        document.addEventListener("DOMContentLoaded", function() {
+            var playlistLinkInput = document.getElementById("playlistLink");
+            var convertForm = document.querySelector("form[action='/externalPlaylist']");
+
+            convertForm.addEventListener("submit", function(event) {
+                if (playlistLinkInput.value === "") {
+                    alert("Please enter a playlist link");
+                    event.preventDefault(); // Prevent form submission if the input is empty
+                }
+            });
+        });
+    </script>
 </body>
 </html>
