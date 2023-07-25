@@ -272,7 +272,7 @@ app.post("/convertPlaylistToYoutube", async function (req, res) {
     await User.findOneAndUpdate({email: global_email}, {$push: {convertedPlaylists: youtubePlaylist}});
   }
 
-  res.render('ConvertedYoutubePlaylist', {youtubePlaylist: youtubePlaylist});
+  res.render('MyConvertedPlaylistTracks', {youtubePlaylist: youtubePlaylist});
 });
 
 // CONVERTING A SPECIFIC SONG TO YOUTUBE
