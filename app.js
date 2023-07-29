@@ -47,6 +47,15 @@ const spotifyApi = new SpotifyWebApi({
   clientSecret: process.env.clientSecret,
 });
 
+// FIRST TIME USERS TO REQUEST ACCESS TO BE ADDED TO THE USER LIST
+app.get('/requestAccess', (req, res) => {
+  const emailAddress = 'nagavel2003@gmail.com'; // Replace with your email address
+  const subject = "Request Access to Spotube";
+  const redirectToGmailURL = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(emailAddress)}&su=${encodeURIComponent(subject)}`;
+  res.redirect(redirectToGmailURL);
+});
+
+
 // AUTHORIZATION OF THE USER
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html");

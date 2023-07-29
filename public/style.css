@@ -72,7 +72,7 @@ h1 {
   border-radius: 20px;
   background-color: #e246ab;
   color: black;
-  padding: 12.4vw 3vw;
+  padding: 10vw 3vw;
 }
 
 .login-div h2 {
@@ -88,7 +88,6 @@ h1 {
   border-radius: 50px;
   color: white;
   padding: 1vw 2vw;
-  font-size: 1.5vw;
   transition: ease-in 0.1s;
 }
 
@@ -477,10 +476,6 @@ h1 {
     padding: 10vw 15vw;
   }
 
-  .login-div h2 {
-    font-size: 10px;
-  }
-
   .landing-page-login-button {
     font-size: 10px;
     padding: 5px 10px;
@@ -533,6 +528,7 @@ h1 {
 
   .login-div {
     margin: 15px;
+    font-size: 0.8em;
   }
 
   .yt-playlist-banner {

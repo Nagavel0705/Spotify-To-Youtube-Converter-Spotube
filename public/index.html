@@ -10,15 +10,19 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body style="background-color: black; padding: 50px;">
+<body style="padding: 50px;">
     <div class="landing-page">
         <div class="website-name">
             <h1>Spotube</h1>
         </div>
         <div class="login-div">
-            <h2>Please login with Spotify</h2>
+            <h3>Please login with Spotify</h3>
             <form action="/login" method="get">
                 <button type="submit" class="landing-page-login-button">Login</button>
+            </form>
+            <h3>If you are a first time user</h3>
+            <form action="/requestAccess" method="get">
+                <button type="submit" class="landing-page-login-button">Request access</button>
             </form>
         </div>
     </div>
