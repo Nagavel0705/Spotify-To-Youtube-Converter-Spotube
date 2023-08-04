@@ -4,6 +4,7 @@ require("dotenv").config();
 const SpotifyWebApi = require("spotify-web-api-node");
 const youtube = require('@googleapis/youtube').youtube('v3');
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 mongoose.connect("mongodb+srv://" + process.env.ATLAS_USERNAME + ":" + process.env.ATLAS_PASSWORD + "@cluster0.d6xb0qt.mongodb.net/SpotifyDB");
 
@@ -23,6 +24,13 @@ const app = express();
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
+
+const allowedOrigins = ['https://spotube.cyclic.app']; 
+
+// Enable CORS with specified allowed origins
+app.use(cors({
+  origin: allowedOrigins,
+}));
 
 const scopes = [
   "ugc-image-upload",
