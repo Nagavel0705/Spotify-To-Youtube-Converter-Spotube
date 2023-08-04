@@ -1,0 +1,32 @@
+<!-- THIS PAGE RENDERS ALL THE PLAYLISTS PREVIOUSLY CONVERTED BY THE USER -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spotube</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <h1 style="margin-top: 60px;">My Youtube Playlists</h1>
+  <div class="my-playlists-div yt-my-playlists-div">
+    <% if(prevConverts.length === 0) { %>
+      <p style="margin-top: 20px;">You haven't converted any playlists yet</p>
+    <% } %> 
+    <% prevConverts.forEach(playlist=> { %>
+      <form action="/getPrevConvertedPlaylistsSongs" method="POST">
+        <div class="playlist-elements yt-playlist-elements" onclick="this.parentNode.submit()">
+          <input type="hidden" name="playlistName" value="<%= playlist[1] %>">
+          <img class="playlist-banner" src="<%= playlist[0] %>" alt="Playlist banner">
+          <p class="playlist-name">
+            <%= playlist[1] %>
+          </p>
+        </div>
+      </form>
+      <% }); %>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotube</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="home-div">
+        <div class="profile-div">
+            <h1>Welcome <%= name %></h1>
+            <img src="<%= profilePic %>" alt="Profile Picture" class="profile-picture">
+        </div>
+        <div class="convert-options">
+            <form action="/myPlaylists" method="post">
+                <button type="submit" class="options">My Spotify Library</button>
+            </form>
+            <form action="/myConvertedPlaylists" method="post">
+                <button type="submit" class="options">My converted playlists</button>
+            </form>
+        </div>
+    </div>
+    <div class="playlist-link-input">
+        <form action="/externalPlaylist" method="post">
+            <input type="text" name="playlistLink" id="playlistLink" placeholder="Enter external playlist link" autocomplete="off">
+            <input type="hidden" name="nameFeedback" value="<%= name %>">
+            <input type="hidden" name="profilePicFeedback" value="<%= profilePic %>">
+            <button type="submit" class="btn btn-outline-success" style="border: 2px solid #1DB954;">Convert</button>
+        </form>
+    </div>
+
+    <script>
+
+        // SO WE SHOW AN ALERT IF THE USER ENTERS AN INVALID PLAYLIST LINK
+        // THE USER FIXES IT AND MOVES FORWARD BUT COMES BACK TO THIS PAGE LATER USING THE BACK BUTTONS
+        // WE DON'T WANT TO SHOW THE ALERT AGAIN
+        // SO WE CHECK IF THE PAGE WAS LOADED FROM THE CACHE(ARRIVED AT THROUGH BACK BUTTONS) OR NOT
+        // IF IT WAS LOADED FROM THE CACHE, WE DON'T SHOW THE ALERT
+        const error = '<%= error %>'
+        const isLoadedFromCache = performance.getEntriesByType("navigation")[0].type === "back_forward";
+        (error != "" && !isLoadedFromCache) && alert("Please enter a playlist link containing a valid playlist ID");
+
+        // SO WE DON'T SUBMIT THE FORM IF THE INPUT IS EMPTY
+        document.addEventListener("DOMContentLoaded", function() {
+            var playlistLinkInput = document.getElementById("playlistLink");
+            var convertForm = document.querySelector("form[action='/externalPlaylist']");
+
+            convertForm.addEventListener("submit", function(event) {
+                if (playlistLinkInput.value === "") {
+                    alert("Please enter a playlist link");
+                    event.preventDefault(); // Prevent form submission if the input is empty
+                }
+            });
+        });
+    </script>
+</body>
+</html>

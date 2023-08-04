@@ -1,0 +1,564 @@
+body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: white;
+  background-color: black;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+/* STYLES FOR index.html */
+.landing-page {
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-color: #1DB954;
+  padding: 2.2vw;
+  flex-flow: wrap;
+}
+
+.website-name {
+  border-radius: 20px;
+  background-color: black;
+  text-align: left;
+  color: white;
+  padding: 10vw 3vw;
+}
+
+.website-name h1 {
+  font-family: 'Raleway', sans-serif;
+  font-size: 10vw;
+  margin: 0px;
+  color: rgba(225, 225, 225, .01);
+  background-image: url("download.jpeg");
+  background-repeat: repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: animate 20s ease-in-out infinite;
+}
+
+@keyframes animate {
+
+  0%,
+  100% {
+    background-position: left;
+  }
+
+  25% {
+    background-position: right;
+  }
+
+  50% {
+    background-position: left;
+  }
+
+  75% {
+    background-position: right;
+  }
+}
+
+.website-name:before {
+  content: "Welcome to";
+  font-size: 2vw;
+  padding-left: 0.5em;
+}
+
+h1 {
+  font-weight: bold;
+}
+
+.login-div {
+  border-radius: 20px;
+  background-color: #e246ab;
+  color: black;
+  padding: 10vw 3vw;
+}
+
+.login-div h2 {
+  margin-bottom: 3vw;
+  margin-top: 0px;
+  font-size: 2vw;
+}
+
+.landing-page-login-button {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  background-color: black;
+  border: none;
+  border-radius: 50px;
+  color: white;
+  padding: 1vw 2vw;
+  transition: ease-in 0.1s;
+}
+
+.landing-page-login-button:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: ease-in 0.1s;
+}
+
+/* STYLES FOR welcome.ejs */
+
+.home-div {
+  display: flex;
+  align-items: center;
+  /* border: 1px solid; */
+  padding: 20px;
+  margin: 10px 0px 20px 0px;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.profile-div {
+  margin: 40px 150px 40px 40px;
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.profile-picture {
+  border-radius: 50%;
+  height: 200px;
+  width: 200px;
+  margin: 50px;
+}
+
+.convert-options {
+  margin: 50px 50px 0px 50px;
+  width: 300px;
+  padding: 20px;
+  background-color: #1DB954;
+  border-radius: 20px;
+}
+
+.options {
+  margin: 15px;
+  padding: 10px;
+  width: 200px;
+  border-radius: 10px;
+  background-color: black;
+  color: white;
+  border: none;
+  transition: transform 0.1s ease;
+}
+
+.options:hover {
+  background-color: black;
+  transform: scale(1.1);
+  transition: cubic-bezier(0.075, 0.82, 0.165, 1) 0.5s;
+}
+
+.playlist-link-input {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-outline-success {
+  padding: 12px 10px;
+  color: #1DB954;
+  margin: 10px;
+  border-radius: 10px;
+}
+
+.btn-outline-success:hover {
+  background-color: #1DB954;
+}
+
+#playlistLink {
+  padding: 10px 15px;
+  /* display: inline; */
+  background-color: black;
+  color: white;
+  border: none;
+  font-size: large;
+  text-align: center;
+}
+
+#playlistLink:focus {
+  outline: none;
+  border-bottom: 1px solid white;
+}
+
+#playlistLink::placeholder {
+  color: white;
+}
+
+/* STYLES FOR MyPlaylist.ejs */
+.my-playlists-div {
+  text-align: center;
+  margin: 5em 15em;
+  padding: 20px;
+  border-radius: 30px;
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0px 100px #1DB954;
+}
+
+.playlist-elements {
+  margin: 20px;
+  padding: 10px 30px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.playlist-elements:hover {
+  cursor: pointer;
+  transform: scale(1.01);
+  transition: cubic-bezier(0.075, 0.82, 0.165, 1) 0.5s;
+  background-color: #1DB954;
+}
+
+.playlist-banner {
+  display: inline-block;
+  height: 65px;
+  width: 65px;
+  border-radius: 10%;
+  margin: 20px;
+}
+
+.playlist-name {
+  color: white;
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  margin: 0px 20px 5px 20px;
+  text-align: left;
+}
+
+.playlist-name:hover {
+  cursor: pointer;
+}
+
+/* STYLES FOR MyPlaylistTracks.ejs */
+
+.convert-button {
+  margin: 20px 0px;
+  padding: 20px;
+  border-radius: 20px;
+  font-size: large;
+  font-weight: bold;
+}
+
+.track-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.track-name {
+  color: white;
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  margin: 20px 20px 5px 20px;
+  text-align: left;
+}
+
+.track-name:hover {
+  cursor: pointer;
+}
+
+.artist-names {
+  color: lightgray;
+  margin: 0px 20px 20px 20px;
+}
+
+.artist-name {
+  margin: 0px;
+  display: inline;
+}
+
+.playlist-header-div {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  margin: 50px;
+}
+
+.playlist-header {
+  margin-left: 50px;
+}
+
+/* STYLES FOR ConvertedYoutubePlaylist.ejs */
+
+.yt-my-playlists-div {
+  box-shadow: 0px 0px 50px #ff0000;
+}
+
+.yt-playlist-elements:hover {
+  background-color: #ff0000;
+}
+
+.yt-playlist-banner {
+  height: 100px;
+  width: 150px;
+}
+
+.yt-track-name {
+  text-decoration: none;
+  background-color: transparent;
+  border: none;
+}
+
+/* STYLES FOR ConvertedYoutubeSongs.ejs */
+
+.embedded-body {
+  overflow-y: hidden;
+}
+
+.player-style {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  /* 16:9 Aspect Ratio (divide 9 by 16 = 0.5625) */
+}
+
+/* Then style the iframe to fit in the container div with full height and width */
+#player {
+  position: absolute;
+  top: 100px;
+  left: 20%;
+  width: 60%;
+  height: 60%;
+}
+
+/* Error page */
+
+.error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* MEDIA STYLES */
+
+@media screen and (max-width: 1024px) {
+  .website-name {
+    margin: 5vw 2vw;
+    padding: 10vw 18vw;
+  }
+
+  .login-div {
+    margin: 5vw 2vw;
+    padding-left: 25vw;
+    padding-right: 25vw;
+  }
+
+  .my-playlists-div {
+    text-align: center;
+    margin: 5em 5em;
+    padding: 20px;
+  }
+
+  .yt-my-playlists-div {
+    box-shadow: 0px 0px 50px #ff0000;
+  }
+
+  .profile-div {
+    margin: 40px 10px 40px 40px;
+  }
+
+  .convert-options {
+    margin: 50px 50px 0px 50px;
+    padding: 10px;
+  }
+}
+
+@media screen and (max-width: 820px) {
+  .landing-page {
+    padding: 0vw 5vw;
+  }
+
+  .website-name {
+    margin: 5vw 5vw;
+    padding-left: 10vw;
+    padding-right: 10vw;
+  }
+
+  .login-div {
+    margin: 5vw 2vw;
+    padding-left: 17vw;
+    padding-right: 17vw;
+  }
+
+  .my-playlists-div {
+    text-align: center;
+    margin: 4em 1em;
+    padding: 10px;
+    box-shadow: 0 0px 50px #1DB954;
+  }
+
+  .playlist-banner {
+    display: inline-block;
+    height: 60px;
+    width: 60px;
+    border-radius: 10%;
+    margin: 10px;
+  }
+
+  .playlist-elements {
+    margin: 20px;
+    padding: 10px 10px;
+    text-align: left;
+  }
+
+  .yt-my-playlists-div {
+    box-shadow: 0px 0px 50px #ff0000;
+  }
+
+  .yt-playlist-elements-tracks {
+    display: block;
+    text-align: center;
+  }
+
+  .yt-playlist-banner {
+    height: 200px;
+    width: 300px;
+    margin-bottom: 0px;
+  }
+
+  .yt-track-name {
+    text-align: center;
+    margin-top: 10px;
+    text-decoration: none;
+    font-size: 1em;
+  }
+
+  .yt-artist-names {
+    color: lightgray;
+    margin: 0px 20px 10px 20px;
+  }
+
+  .home-div {
+    text-align: center;
+    display: block;
+    /* padding: 20px; */
+    margin: 10px 0px 20px 0px;
+  }
+
+  .profile-div {
+    margin: auto;
+  }
+
+  .profile-picture {
+    border-radius: 50%;
+    height: 200px;
+    width: 200px;
+    margin: 50px auto;
+  }
+
+  .convert-options {
+    margin: auto;
+  }
+
+  .playlist-link-input {
+    margin-bottom: 30px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .landing-page {
+    padding: 5vw;
+  }
+
+  .website-name {
+    margin: 5vw 5vw;
+    padding: 20vw 6vw;
+  }
+
+  .login-div {
+    margin: 5vw 2vw;
+    padding: 10vw 15vw;
+  }
+
+  .landing-page-login-button {
+    font-size: 10px;
+    padding: 5px 10px;
+  }
+
+  .my-playlists-div {
+    text-align: center;
+    margin: 3em 1em;
+    padding: 5px;
+    box-shadow: 0 0px 50px #1DB954;
+  }
+
+  .playlist-elements {
+    margin: 10px;
+    padding: 5px;
+  }
+
+  .playlist-name {
+    font-size: 20px;
+    margin-bottom: 5px;
+  }
+
+  .artist-names {
+    color: lightgray;
+    margin: 0px 20px 20px 20px;
+    font-size: 12px;
+  }
+
+  .playlist-header {
+    font-size: x-large;
+  }
+
+  .yt-my-playlists-div {
+    box-shadow: 0px 0px 50px #ff0000;
+  }
+
+  .error-image {
+    width: 90vw;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .landing-page {
+    padding: 20px;
+  }
+
+  .website-name {
+    margin: 20px;
+  }
+
+  .login-div {
+    margin: 15px;
+    font-size: 0.8em;
+  }
+
+  .yt-playlist-banner {
+    height: 200px;
+    width: 250px;
+    margin-bottom: 0px;
+  }
+
+  .playlist-link-input {
+    display: block;
+  }
+
+  #playlistLink {
+    display: block;
+    margin: auto;
+  }
+}
+
+@media screen and (max-width: 300px) {
+  .yt-playlist-banner {
+    height: 100px;
+    width: 150px;
+  }
+
+  .options {
+    width: auto;
+  }
+
+  .convert-options {
+    margin: auto;
+    width: 200px;
+  }
+}

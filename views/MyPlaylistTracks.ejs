@@ -1,0 +1,76 @@
+<!-- THIS PAGE RENDERS THE TRACKS IN A PARTICULAR PLAYLIST -->
+<!-- THE PLAYLIST MAYBE FROM THE USER'S LIBRARY OR AN EXTERNAL PLAYLIST RECEIVED THROUGH A LINK -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotube</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <script>
+      // REMOVES THE ONCLICK ATTRIBUTE FROM THE SONGS NOT AVAILABLE (THEIR CLASS IS .playlist-name UNLIKE 
+      // OTHER ELEMENTS WITH CLASS .track-name) TO PREVENT FORM SUBMISSION
+      document.addEventListener('DOMContentLoaded', function() {
+        var playlistElements = document.querySelectorAll('.playlist-elements');
+        playlistElements.forEach(function(element) {
+          var playlistName = element.querySelector('p.playlist-name');
+          if (playlistName) {
+            element.removeAttribute('onclick');
+          }
+        });
+      });
+    </script>
+</head>
+
+<body>
+    <div class="playlist-header-div">
+      <img src="<%= playlistImg %>" alt="Playlist banner" width="150px" height="150px"/>
+      <h1 class="playlist-header"><%= playlistName %></h1>
+    </div>
+    <div class="my-playlists-div">
+
+      <form action="/convertPlaylistToYoutube" method="post">
+        <input type="hidden" name="playlistImg" value="<%= playlistImg %>">
+        <input type="hidden" name="playlistName" value="<%= playlistName %>">
+        <button type="submit" class="btn btn-outline-danger convert-button">CONVERT ENTIRE PLAYLIST</button>
+      </form>
+
+        <% tracks.forEach(track => { %>
+          <form action="/convertTrackToYoutube" method="POST">
+            <div class="playlist-elements" onclick="this.parentNode.submit()">
+              <img class="playlist-banner" src="<%= track[1] %>" alt="Track image">
+              <div class="track-info">
+                <% if (track[1] === "Spotify_App_Logo.svg.png") { %>
+                  <!-- CLASS IS .playlist-name INSTEAD OF .track-name TO DIFFERENTIATE -->
+                  <!-- BETWEEN VALID AND INVALID SONGS -->
+                  <p class="playlist-name">
+                    Song Not Available :&#40;
+                  </p>
+                <% } else { %>
+                  <input type="hidden" name="playlistName" value="<%= playlistName %>">
+                  <input type="hidden" name="songName" value="<%= track[0] %>">
+                  <input type="hidden" name="artistName" value="<%= track[2][0] %>">
+                  <p class="track-name">
+                    <%= track[0] %>
+                  </p>
+                  <div class="artist-names">
+                    <% for(let artist = 0; artist < track[2].length; artist++) { %>
+                      <p class="artist-name">
+                        <%= track[2][artist] %>
+                      </p>
+                      <% if(artist != track[2].length-1) { %>
+                        <p class="artist-name">,</p>
+                      <% } %>
+                    <% }; %>
+                  </div>
+                <% } %>
+              </div>
+            </div>
+          </form>
+        <% }); %>
+      </div>      
+</body>
+
+</html>

@@ -1,0 +1,68 @@
+<!-- THIS PAGE RENDERS AN IFRAME PLAYER, I.E., PLAYS THE VIDEO OF THE SPOTIFY TRACK IN YOUTUBE IFRAME (EMBEDDED PLAYER)-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotube</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="embedded-body">
+    
+    <div class="player-style">
+        <div id="player"></div>
+    </div>
+
+    <script>
+
+        // Obtaining the video ID and name from the server
+        const videoID = "<%= videoID %>";
+
+        // This code loads the IFrame Player API code asynchronously.
+        // into the head of the document.
+        var tag = document.createElement('script');
+
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        // This function creates an <iframe> (and YouTube player) after the API code downloads.
+        // It is automatically called by the API
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                videoId: videoID,
+                playerVars: {
+                    'playsinline': 1
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': changeBoxShadow
+                }
+            });
+        }
+
+        // The API calls this function when the player is ready
+        function onPlayerReady(event){
+            document.getElementById("player").style.boxShadow = "0px 0px 50px 10px #1DB954";
+        }
+
+        // This function is called each time the player's state changes
+        function changeBoxShadow(event){
+            var playerStatus = event.data;
+            var color;
+            if(playerStatus == 1){
+                color = "#1DB954";
+            } else {
+                color = "#ff0000";
+            }
+            if(color){
+                document.getElementById("player").style.boxShadow = "0px 0px 50px 10px" + color;
+            }
+        }
+    </script>
+</body>
+
+</html>
