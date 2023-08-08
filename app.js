@@ -17,7 +17,7 @@ mongoose.connect(
 let global_email = ""; // STORING THE CURRENT USER'S EMAIL GLOBALLY FOR ACCESS IN ALL ROUTES
 // NOTICE HOW IT IS A GLOBAL VARIABLE !!!!
 let tracks = [];
-let allowed_emails = ["nagavel2003@gmail.com", "abiraj252002@gmail.com",];
+let allowed_emails = ["nagavel2003@gmail.com", "abiraj252002@gmail.com","karthikguntuka074@gmail.com"];
 
 const User = mongoose.model("User", {
   email: String,
