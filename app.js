@@ -17,7 +17,6 @@ mongoose.connect(
 let global_email = ""; // STORING THE CURRENT USER'S EMAIL GLOBALLY FOR ACCESS IN ALL ROUTES
 // NOTICE HOW IT IS A GLOBAL VARIABLE !!!!
 let tracks = [];
-let allowed_emails = ["nagavel2003@gmail.com", "abiraj252002@gmail.com","karthikguntuka074@gmail.com"];
 
 const User = mongoose.model("User", {
   email: String,
@@ -125,35 +124,35 @@ app.get("/callback", (req, res) => {
 
         // console.log(JSON.stringify(me, null, 4));
 
-        if (!allowed_emails.includes(global_email)) res.json("Not allowed. First request access");
-        else {
-          const isUserExisting = await User.findOne({ email: global_email });
+        const isUserExisting = await User.findOne({ email: global_email });
 
-          if (!isUserExisting) {
-            const user = new User({
-              email: global_email,
-              id: me.body.id,
-              accessToken: access_token,
-              refreshToken: refresh_token,
-            });
-
-            user.save();
-          } else {
-            await User.findOneAndUpdate(
-              { email: global_email },
-              { accessToken: access_token, refreshToken: refresh_token }
-            );
-          }
-
-          profileDp = me.body.images.length === 0 ? "Spotify_App_Logo.svg.png" : me.body.images[1]["url"];
-
-          // REDIRECTING TO WELCOME PAGE WHICH DISPLAYS THE USER'S NAME AND PROFILE PICTURE
-          res.render("welcome", {
-            profilePic: profileDp,
-            name: me.body["display_name"],
-            error: "",
+        if (!isUserExisting) {
+          const user = new User({
+            email: global_email,
+            id: me.body.id,
+            accessToken: access_token,
+            refreshToken: refresh_token,
           });
+
+          user.save();
+        } else {
+          await User.findOneAndUpdate(
+            { email: global_email },
+            { accessToken: access_token, refreshToken: refresh_token }
+          );
         }
+
+        profileDp =
+          me.body.images.length === 0
+            ? "Spotify_App_Logo.svg.png"
+            : me.body.images[1]["url"];
+
+        // REDIRECTING TO WELCOME PAGE WHICH DISPLAYS THE USER'S NAME AND PROFILE PICTURE
+        res.render("welcome", {
+          profilePic: profileDp,
+          name: me.body["display_name"],
+          error: "",
+        });
       } catch (e) {
         console.error("Error getting user", e);
       }
@@ -184,22 +183,27 @@ app.get("/callback", (req, res) => {
 app.post("/myPlaylists", async function (req, res) {
   const user = await User.findOne({ email: global_email });
 
-  const data = await spotifyApi.getUserPlaylists(user.id);
+  // console.log(user);
+  try{
+    const data = await spotifyApi.getUserPlaylists(user.id);
 
-  console.log("--------------------+++++++++++++++++++++++++");
-  let playlists = [];
+    console.log("--------------------+++++++++++++++++++++++++");
+    let playlists = [];
 
-  // console.log(JSON.stringify(data, null, 4));
+    // console.log(JSON.stringify(data, null, 4));
 
-  for (let playlist of data.body.items) {
-    // DISPLAYED ITEMS ARE THE PLAYLIST IMAGE, NAME
-    // ID IS FOR RETRIEVING THE SONGS IN THE PLAYLIST IN THE NEXT STEP
-    playlists.push([playlist.images[0].url, playlist.name, playlist.id]);
+    for (let playlist of data.body.items) {
+      // DISPLAYED ITEMS ARE THE PLAYLIST IMAGE, NAME
+      // ID IS FOR RETRIEVING THE SONGS IN THE PLAYLIST IN THE NEXT STEP
+      playlists.push([playlist.images[0].url, playlist.name, playlist.id]);
+    }
+
+    // console.log(playlists);
+
+    res.render("MyPlaylists", { playlists: playlists });
+  } catch(err){
+    res.json(`${err.statusCode} Not Authorized. Request access if you are a first time user`);
   }
-
-  // console.log(playlists);
-
-  res.render("MyPlaylists", { playlists: playlists });
 });
 
 // DISPLAYING THE PREVIOUSLY CONVERTED PLAYLISTS
@@ -416,12 +420,16 @@ app.post("/externalPlaylist", async function (req, res) {
       });
     })
     .catch((err) => {
-      console.log(err.body.error.message);
-      res.render("welcome", {
-        profilePic: req.body.profilePicFeedback,
-        name: req.body.nameFeedback,
-        error: err.body.error.message,
-      });
+      console.error(err);
+      if(err.statusCode === 404){
+        res.render("welcome", {
+          profilePic: req.body.profilePicFeedback,
+          name: req.body.nameFeedback,
+          error: err.body.error.message,
+        });
+      } else if(err.statusCode === 403) {
+        res.json(`${err.statusCode} Not Authorized. Request access if you are a first time user`)
+      }
     });
 });
 
