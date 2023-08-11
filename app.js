@@ -14,10 +14,6 @@ mongoose.connect(
     "@cluster0.d6xb0qt.mongodb.net/SpotifyDB"
 );
 
-let global_email = ""; // STORING THE CURRENT USER'S EMAIL GLOBALLY FOR ACCESS IN ALL ROUTES
-// NOTICE HOW IT IS A GLOBAL VARIABLE !!!!
-let tracks = [];
-
 const User = mongoose.model("User", {
   email: String,
   id: String,
@@ -120,15 +116,16 @@ app.get("/callback", (req, res) => {
       try {
         const me = await spotifyApi.getMe();
 
-        global_email = me.body.email;
+        currentUserEmail = me.body.email;
+
 
         // console.log(JSON.stringify(me, null, 4));
 
-        const isUserExisting = await User.findOne({ email: global_email });
+        const isUserExisting = await User.findOne({ email: currentUserEmail });
 
         if (!isUserExisting) {
           const user = new User({
-            email: global_email,
+            email: currentUserEmail,
             id: me.body.id,
             accessToken: access_token,
             refreshToken: refresh_token,
@@ -137,7 +134,7 @@ app.get("/callback", (req, res) => {
           user.save();
         } else {
           await User.findOneAndUpdate(
-            { email: global_email },
+            { email: currentUserEmail },
             { accessToken: access_token, refreshToken: refresh_token }
           );
         }
@@ -151,6 +148,7 @@ app.get("/callback", (req, res) => {
         res.render("welcome", {
           profilePic: profileDp,
           name: me.body["display_name"],
+          email: currentUserEmail,
           error: "",
         });
       } catch (e) {
@@ -168,7 +166,7 @@ app.get("/callback", (req, res) => {
         spotifyApi.setAccessToken(access_token);
 
         await User.findOneAndUpdate(
-          { email: global_email },
+          { email: currentUserEmail },
           { accessToken: access_token }
         );
       }, 3500000);
@@ -181,7 +179,9 @@ app.get("/callback", (req, res) => {
 
 // DISPLAYING THE PLAYLISTS IN THE USER'S SPOTIFY LIBRARY
 app.post("/myPlaylists", async function (req, res) {
-  const user = await User.findOne({ email: global_email });
+  const currentUserEmail = req.body.emailFeedback;
+
+  const user = await User.findOne({ email: currentUserEmail });
 
   // console.log(user);
   try{
@@ -208,7 +208,9 @@ app.post("/myPlaylists", async function (req, res) {
 
 // DISPLAYING THE PREVIOUSLY CONVERTED PLAYLISTS
 app.post("/myConvertedPlaylists", async function (req, res) {
-  const user = await User.findOne({ email: global_email });
+  const currentUserEmail = req.body.emailFeedback;
+
+  const user = await User.findOne({ email: currentUserEmail });
 
   // STORES THE PLAYLIST IMAGE AND NAME FOR ALL THE PREVIOUSLY CONVERTED PLAYLISTS
   let prevConverts = [];
@@ -217,30 +219,29 @@ app.post("/myConvertedPlaylists", async function (req, res) {
     prevConverts.push([playlist[0][0], playlist[0][1]]);
   });
 
-  res.render("MyConvertedPlaylists", { prevConverts: prevConverts });
+  res.render("MyConvertedPlaylists", { prevConverts: prevConverts, email: currentUserEmail });
 });
 
 // DISPLAYING THE YOUTUBE SONGS IN THE PREVIOUSLY CONVERTED PLAYLIST
 app.post("/getPrevConvertedPlaylistsSongs", async function (req, res) {
-  const user = await User.findOne({ email: global_email });
+  const currentUserEmail = req.body.emailFeedback;
+  const user = await User.findOne({ email: currentUserEmail });
   const playlistName = req.body.playlistName;
   user.convertedPlaylists.forEach((playlist) => {
     if (playlist[0][1] === playlistName) {
-      res.render("MyConvertedPlaylistTracks", { youtubePlaylist: playlist });
+      res.render("MyConvertedPlaylistTracks", { youtubePlaylist: playlist, email: currentUserEmail });
     }
   });
 });
 
 // RETRIEVING THE SONGS IN THE USER'S SPECIFIED SPOTIFY PLAYLIST
 app.post("/getUserPlaylistSongs", async function (req, res) {
-  const playlistID = req.body.playlistId;
-  const playlistName = req.body.playlistName;
-  const playlistImg = req.body.playlistImg;
+  const {playlistImg, playlistName, playlistId} = req.body;
 
   // THE BELOW ARRAY STORES THE TRACK NAME, TRACK IMAGE AND THE ARTIST NAMES FOR ALL THE
   // SONGS IN THE PLAYLIST
 
-  const trackData = await spotifyApi.getPlaylistTracks(playlistID);
+  const trackData = await spotifyApi.getPlaylistTracks(playlistId);
 
   // console.log(JSON.stringify(trackData, null, 4));
 
@@ -258,23 +259,26 @@ app.post("/getUserPlaylistSongs", async function (req, res) {
   }
 
   // console.log(tracks);
-  console.log(playlistName, playlistID);
+  console.log(playlistName, playlistId);
   res.render("MyPlaylistTracks", {
     playlistImg: playlistImg,
     playlistName: playlistName,
     tracks: tracks,
+    email: currentUserEmail 
   });
 });
 
 // CONVERTING AN ENTIRE SPOTIFY PLAYLIST TO YOUTUBE
 app.post("/convertPlaylistToYoutube", async function (req, res) {
+  const {playlistName, playlistImg} = req.body;
+  const currentUserEmail = req.body.emailFeedback;
+  const tracks = JSON.parse(req.body.tracksFeedback);
   let youtubePlaylist = [];
-  const playlistName = req.body.playlistName;
-  const playlistImg = req.body.playlistImg;
   let flag = 0;
+  // console.log(tracks);
 
   // TO CHECK IF THE USER HAS ALREADY CONVERTED THE PLAYLIST BEFORE
-  await User.findOne({ email: global_email }).then((user) => {
+  await User.findOne({ email: currentUserEmail }).then((user) => {
     user.convertedPlaylists.forEach((playlist) => {
       if (playlist[0][1] === playlistName) {
         youtubePlaylist = playlist;
@@ -320,27 +324,24 @@ app.post("/convertPlaylistToYoutube", async function (req, res) {
     // ADDING THE CONVERTED PLAYLIST TO THE ARRAY OF CONVERTED PLAYLISTS IN THE USER'S DOCUMENT
     // IN THE DATABASE
     await User.findOneAndUpdate(
-      { email: global_email },
+      { email: currentUserEmail },
       { $push: { convertedPlaylists: youtubePlaylist } }
     );
   }
 
-  res.render("MyConvertedPlaylistTracks", { youtubePlaylist: youtubePlaylist });
+  res.render("MyConvertedPlaylistTracks", { youtubePlaylist: youtubePlaylist, email: currentUserEmail });
 });
 
 // CONVERTING A SPECIFIC SONG TO YOUTUBE
 app.post("/convertTrackToYoutube", async function (req, res) {
-  const songName = req.body.songName;
-  const artistName = req.body.artistName;
-  console.log(songName);
-  console.log(artistName);
-  const playlistName = req.body.playlistName;
-  console.log(playlistName);
+  const {songName, artistName, playlistName} = req.body; 
+  const currentUserEmail = req.body.emailFeedback;
+  
   let flag = 0;
   var videoID = "";
 
   // CHECKING IF THE SPOTIFY PLAYLIST CONTAINING THE SONG HAS BEEN CONVERTED BEFORE
-  const user = await User.findOne({ email: global_email });
+  const user = await User.findOne({ email: currentUserEmail });
   user.convertedPlaylists.forEach((playlist) => {
     // IF IT HAS BEEN CONVERTED BEFORE, THEN THE VIDEO ID IS RETRIEVED FROM THE ARRAY
     if (playlist[0][1] === playlistName) {
@@ -379,6 +380,7 @@ app.post("/convertTrackToYoutube", async function (req, res) {
 // DISPLAYING SONGS FROM AN EXTERNAL PLAYLIST
 app.post("/externalPlaylist", async function (req, res) {
   // THE USER ENTERS THE URL AND WE NEED TO RETRIEVE THE PLAYLIST ID FROM THE URL
+  const currentUserEmail = req.body.emailFeedback;
   const playlistURL = req.body.playlistLink;
   // PERFORM STRING SPLITTING USING REGEX
   const parts = playlistURL.split(/[/?]/);
@@ -417,6 +419,7 @@ app.post("/externalPlaylist", async function (req, res) {
         playlistImg: playlistImg,
         playlistName: playlistName,
         tracks: tracks,
+        email: currentUserEmail
       });
     })
     .catch((err) => {
@@ -426,6 +429,7 @@ app.post("/externalPlaylist", async function (req, res) {
           profilePic: req.body.profilePicFeedback,
           name: req.body.nameFeedback,
           error: err.body.error.message,
+          email: req.body.emailFeedback
         });
       } else if(err.statusCode === 403) {
         res.json(`${err.statusCode} Not Authorized. Request access if you are a first time user`)

@@ -15,9 +15,11 @@
         </div>
         <div class="convert-options">
             <form action="/myPlaylists" method="post">
+                <input type="hidden" name="emailFeedback" value="<%= email %>">
                 <button type="submit" class="options">My Spotify Library</button>
             </form>
             <form action="/myConvertedPlaylists" method="post">
+                <input type="hidden" name="emailFeedback" value="<%= email %>">
                 <button type="submit" class="options">My converted playlists</button>
             </form>
         </div>
@@ -27,6 +29,7 @@
             <input type="text" name="playlistLink" id="playlistLink" placeholder="Enter external playlist link" autocomplete="off">
             <input type="hidden" name="nameFeedback" value="<%= name %>">
             <input type="hidden" name="profilePicFeedback" value="<%= profilePic %>">
+            <input type="hidden" name="emailFeedback" value="<%= email %>">
             <button type="submit" class="btn btn-outline-success" style="border: 2px solid #1DB954;">Convert</button>
         </form>
     </div>

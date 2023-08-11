@@ -20,6 +20,7 @@
           <div class="playlist-elements yt-playlist-elements yt-playlist-elements-tracks" onclick="this.parentNode.submit()">
             <img class="playlist-banner yt-playlist-banner" src="<%= track[3] %>" alt="Track image">
             <div class="track-info">
+              <input type="hidden" name="emailFeedback" value="<%= email %>">
               <input type="hidden" name="songName" value="<%= track[4] %>">
               <input type="hidden" name="playlistName" value="<%= youtubePlaylist[0][1] %>">
               <p class="track-name yt-track-name">

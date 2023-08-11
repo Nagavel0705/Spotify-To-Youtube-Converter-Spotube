@@ -18,6 +18,7 @@
     <% prevConverts.forEach(playlist=> { %>
       <form action="/getPrevConvertedPlaylistsSongs" method="POST">
         <div class="playlist-elements yt-playlist-elements" onclick="this.parentNode.submit()">
+          <input type="hidden" name="emailFeedback" value="<%= email %>">
           <input type="hidden" name="playlistName" value="<%= playlist[1] %>">
           <img class="playlist-banner" src="<%= playlist[0] %>" alt="Playlist banner">
           <p class="playlist-name">

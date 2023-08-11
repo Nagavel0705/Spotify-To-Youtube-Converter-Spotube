@@ -32,6 +32,8 @@
     <div class="my-playlists-div">
 
       <form action="/convertPlaylistToYoutube" method="post">
+        <input type="hidden" name="tracksFeedback" value="<%= JSON.stringify(tracks) %>">
+        <input type="hidden" name="emailFeedback" value="<%= email %>">
         <input type="hidden" name="playlistImg" value="<%= playlistImg %>">
         <input type="hidden" name="playlistName" value="<%= playlistName %>">
         <button type="submit" class="btn btn-outline-danger convert-button">CONVERT ENTIRE PLAYLIST</button>
@@ -49,6 +51,7 @@
                     Song Not Available :&#40;
                   </p>
                 <% } else { %>
+                  <input type="hidden" name="emailFeedback" value="<%= email %>">
                   <input type="hidden" name="playlistName" value="<%= playlistName %>">
                   <input type="hidden" name="songName" value="<%= track[0] %>">
                   <input type="hidden" name="artistName" value="<%= track[2][0] %>">
