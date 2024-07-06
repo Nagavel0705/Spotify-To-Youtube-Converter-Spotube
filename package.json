@@ -1,7 +1,7 @@
 {
-  "name": "learning-auth-flow",
+  "name": "spotube",
   "version": "1.0.0",
-  "description": "learning spotify authorization flow",
+  "description": "spotify to youtube converter",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
