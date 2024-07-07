@@ -434,7 +434,7 @@ app.post("/externalPlaylist", async function (req, res) {
     });
 });
 
-app.listen(3000, () =>
+app.listen(process.env.PORT || 3000, () =>
   console.log(
     "HTTP Server up. Now go to http://localhost:3000 in your browser."
   )
