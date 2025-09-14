@@ -35,4 +35,4 @@ https://github.com/Nagavel0705/Spotify-To-Youtube-Converter-Spotube/assets/96764
 
 (Notice the faster conversion speeds when converted for the 2nd time in comparison to the first. This is because conversion is expensive due to YouTube quota limits. It is better (and faster) to store the links obtained during the first conversion in the database pertaining to the user and retrieve links from the DB for future conversions) 
 
-### Deployed at: [https://spotube.cyclic.app/](https://spotube-wlqh.onrender.com)
+### Deployed at: [https://spotube-wlqh.onrender.com](https://spotube-wlqh.onrender.com)
